@@ -68,7 +68,7 @@ const BookCard = ({ book = {}, layout }) => {
                     <CommonBtn
                         className={`rounded-full !min-h-auto !h-[48px]`}
                         link={true}
-                        path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${id}`}`}
+                        path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${book?.slug}`}`}
                     >
                         {type === 'ebook' ? 'Continue reading' : 'Buy Now'}
                     </CommonBtn>
@@ -96,8 +96,13 @@ const BookCard = ({ book = {}, layout }) => {
                 </div>
                 <p className="text-sm md:text-base">Reviews: ({no_of_reviews} reviews)</p>
             </div>
-            <CommonBtn className={`!h-[50px] min-h-auto`} link={true} path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${slug}`}`}>
-                View more
+
+            <CommonBtn
+                className={`rounded-full !min-h-auto !h-[48px]`}
+                link={true}
+                path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${book?.slug}`}`}
+            >
+                {type === 'ebook' ? 'Continue reading' : 'View more'}
             </CommonBtn>
         </div>
     )

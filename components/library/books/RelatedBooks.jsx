@@ -37,6 +37,7 @@ const RelatedBooks = ({ book }) => {
         },
         enabled: !!categoryString,
     });
+    console.log("Get related books:--->", relatedBooks)
 
     const handlePageClick = (page) => {
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -76,5 +77,4 @@ const RelatedBooks = ({ book }) => {
         </div>
     );
 };
-
 export default RelatedBooks;
