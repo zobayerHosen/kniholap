@@ -4,12 +4,15 @@ import CommonBtn from "./common/CommonBtn"
 import { FaRegBookmark, FaBookmark } from "react-icons/fa6";
 import { useState } from "react";
 import dummyImage from "@/public/dummyImage.png"
+import useBookMarks from "@/hooks/bookmarks.hook";
 const BookCard = ({ book = {}, layout }) => {
+    console.log("Book Mark card data:--->", book)
+    const { handleBookMarksMutation } = useBookMarks();
 
     const {
         id,
         slug,
-        author_name,
+        author,
         cover_image,
         images = [],
         title,
@@ -26,6 +29,7 @@ const BookCard = ({ book = {}, layout }) => {
     const [imgSrc, setImgSrc] = useState(cover_image || dummyImage);
     const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
     const handleBookmark = () => {
+        handleBookMarksMutation.mutate({ book_id: id });
         setIsBookmarked(!isBookmarked);
     };
     if (layout === "bookmark") {
@@ -37,10 +41,10 @@ const BookCard = ({ book = {}, layout }) => {
                     />
                 </div>
                 <div className="w-full flex flex-col gap-2 lg:gap-4">
-                    <p className="lg:text-3xl text-lg md:text-xl font-medium ">{title}</p>
-                    <p><span className="lg:text-xl text-base font-medium">Author:</span> <b className="text-[#A27B5C]">{author_name}</b></p>
+                    <p className="lg:text-3xl text-lg md:text-xl font-medium ">{title} </p>
+                    <p><span className="lg:text-xl text-base font-medium">Author:</span> <b className="text-[#A27B5C]">{author || "Unknown"}</b></p>
                     <div className="w-full text-xl md:flex-row flex-col-reverse flex items-center justify-start gap-2 lg:gap-5">
-                        <StarRating rating={rating} className="text-sm self-start" />
+                        <StarRating rating={rating} value={rating} className="text-sm self-start" />
                         <p className="font-medium line-clamp-1 self-start md:text-base text-xs sm:text-sm">
                             <span>{Number(rating).toFixed(1)} </span>
                             <span>Reviews:</span> ({no_of_reviews} reviews)
@@ -86,7 +90,7 @@ const BookCard = ({ book = {}, layout }) => {
             </div>
             <div className="w-full flex flex-col gap-1">
                 <p className="sm:text-xl text-lg md:text-2xl font-medium line-clamp-1">{title}</p>
-                <p><span className="md:text-xl text-base sm:text-lg font-medium">Author:</span> {author_name}</p>
+                <p><span className="md:text-xl text-base sm:text-lg font-medium">Author:</span> {author}</p>
                 <div className="w-full text-sm md:text-base flex items-center justify-between gap-1">
                     <StarRating rating={rating} />
                     <span>{Number(rating).toFixed(1)}</span>
