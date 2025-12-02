@@ -76,7 +76,7 @@ const Testimonials = () => {
                     gradientWidth={50}
                     gradientColor="#f5f5f9"
                     direction="left"
-                    className="min-h-[300px]"
+                    className="min-h-[350px]"
                 >
                     {testimonialsData?.map((testimony, index) => (
                         <TestimonyCard key={index} testimony={testimony} />
