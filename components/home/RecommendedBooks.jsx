@@ -15,6 +15,7 @@ const RecommendedBooks = () => {
             return response?.data?.data || [];
         }
     });
+    console.log("Recommended books:---->", getAllRecommendedBooks);
 
     return (
         <section className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-20">
@@ -24,13 +25,13 @@ const RecommendedBooks = () => {
                 {isLoading ? (
                     <RecommendedBookCardSkeleton />
                 ) : isError ? (
-                    <p>Error loading featured book</p>
+                    <p className="w-full text-center text-2xl font-medium pt-8">Error loading featured book</p>
                 ) : !getAllRecommendedBooks?.[0] ? (
                     <p>No featured book available</p>
                 ) : (
-                    <RecommendedBookCard 
-                        book={getAllRecommendedBooks[0]} 
-                        isFirstBook={true} 
+                    <RecommendedBookCard
+                        book={getAllRecommendedBooks[0]}
+                        isFirstBook={true}
                     />
                 )}
             </div>
@@ -50,15 +51,14 @@ const RecommendedBooks = () => {
                 </div>
             ) : (
                 getAllRecommendedBooks.slice(1).map((book) => (
-                    <RecommendedBookCard 
-                        key={book.id} 
-                        book={book} 
-                        isFirstBook={false} 
+                    <RecommendedBookCard
+                        key={book.id}
+                        book={book}
+                        isFirstBook={false}
                     />
                 ))
             )}
         </section>
     );
 };
-
 export default RecommendedBooks;

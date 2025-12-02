@@ -6,9 +6,9 @@ import { useState } from "react";
 import dummyImage from "@/public/dummyImage.png"
 import useBookMarks from "@/hooks/bookmarks.hook";
 const BookCard = ({ book = {}, layout }) => {
-    console.log("Book Mark card data:--->", book)
     const { handleBookMarksMutation } = useBookMarks();
 
+    // Note: destructure all properties
     const {
         id,
         slug,
