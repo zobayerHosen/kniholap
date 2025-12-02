@@ -3,7 +3,9 @@ import StarRating from "./common/StarRating"
 import CommonBtn from "./common/CommonBtn"
 import { FaRegBookmark, FaBookmark } from "react-icons/fa6";
 import { useState } from "react";
+import dummyImage from "@/public/dummyImage.png"
 const BookCard = ({ book = {}, layout }) => {
+
     const {
         id,
         slug,
@@ -21,6 +23,7 @@ const BookCard = ({ book = {}, layout }) => {
         categories = [],
         isbn
     } = book || {}
+    const [imgSrc, setImgSrc] = useState(cover_image || dummyImage);
     const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
     const handleBookmark = () => {
         setIsBookmarked(!isBookmarked);
@@ -29,7 +32,9 @@ const BookCard = ({ book = {}, layout }) => {
         return (
             <div className="w-full p-4 md:p-6 rounded-3xl border flex sm:flex-row flex-col justify-start gap-4 md:gap-8 border-black/20">
                 <div className="lg:w-96 sm:w-[250px] h-[250px] lg:h-96 shrink-0 rounded-lg overflow-hidden">
-                    <img src={cover_image} alt={title} className="w-full h-full object-cover hover:scale-110 transition-all ease-in-out duration-500" />
+                    <img src={imgSrc} alt={title} className="w-full h-full object-cover hover:scale-110 transition-all ease-in-out duration-500"
+                        onError={() => setImgSrc(dummyImage.src)}
+                    />
                 </div>
                 <div className="w-full flex flex-col gap-2 lg:gap-4">
                     <p className="lg:text-3xl text-lg md:text-xl font-medium ">{title}</p>
@@ -72,7 +77,12 @@ const BookCard = ({ book = {}, layout }) => {
     return (
         <div className="w-full p-4 md:p-6 rounded-3xl border flex flex-col justify-start gap-4 border-black/20">
             <div className="w-full h-52 xs:h-56 sm:h-60 rounded-lg overflow-hidden">
-                <img src={cover_image} alt={title} className="w-full h-full object-cover hover:scale-110 transition-all ease-in-out duration-500" />
+                <img
+                    src={imgSrc}
+                    alt={title}
+                    className="w-full h-full object-cover hover:scale-110 transition-all ease-in-out duration-500"
+                    onError={() => setImgSrc(dummyImage.src)}
+                />
             </div>
             <div className="w-full flex flex-col gap-1">
                 <p className="sm:text-xl text-lg md:text-2xl font-medium line-clamp-1">{title}</p>
