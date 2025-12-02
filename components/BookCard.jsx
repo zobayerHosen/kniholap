@@ -68,12 +68,11 @@ const BookCard = ({ book = {}, layout }) => {
                     <CommonBtn
                         className={`rounded-full !min-h-auto !h-[48px]`}
                         link={true}
-                        path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${slug}`}`}
+                        path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${id}`}`}
                     >
                         {type === 'ebook' ? 'Continue reading' : 'Buy Now'}
                     </CommonBtn>
                 </div>
-
             </div>
         )
     }

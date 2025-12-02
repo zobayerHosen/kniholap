@@ -6,6 +6,7 @@ import { Autoplay } from "swiper/modules";
 import BookCard from "../BookCard";
 import { useQuery } from "@tanstack/react-query";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
+import BookmarkSkeleton from "../BookmarkSkeleton";
 const BookMarkList = () => {
     const axiosInstance = axiosPrivateClient();
 
@@ -41,11 +42,21 @@ const BookMarkList = () => {
             className="w-full lg:mb-10 !px-1"
             autoplay={{ delay: 2500, disableOnInteraction: false }}
         >
-            {getBookmarksList?.map((book, idx) => (
-                <SwiperSlide className="w-full" key={idx}>
-                    <BookCard layout="bookmark" book={book} />
-                </SwiperSlide>
-            ))}
+            {
+                isLoading ? (
+                    <div className="w-full grid grid-cols-1 ">
+                        {Array.from({ length: 1 }).map((_, i) => (
+                            <BookmarkSkeleton key={i} />
+                        ))}
+                    </div>
+                ) : (
+                    getBookmarksList?.map((book, idx) => (
+                        <SwiperSlide className="w-full" key={idx}>
+                            <BookCard layout="bookmark" book={book} />
+                        </SwiperSlide>
+                    ))
+                )
+            }
         </Swiper>
     )
 };
