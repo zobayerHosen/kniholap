@@ -1,6 +1,7 @@
-'use client'
-
+'use client';
+import Loading from "@/app/loading";
 import BookCard from "@/components/BookCard";
+import BookCardSkeleton from "@/components/BookCardSkeleton";
 import CustomPagination from "@/components/common/CustomPagination";
 import SectionTitle from "@/components/common/SectionTitle";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
@@ -17,7 +18,7 @@ const RelatedBooks = ({ book }) => {
         try {
             const parsed = JSON.parse(book.category_ids);
             if (Array.isArray(parsed)) {
-                 return parsed.join(",");
+                return parsed.join(",");
             }
         } catch (error) {
             console.error("Failed to parse category_ids:", error);
@@ -37,14 +38,17 @@ const RelatedBooks = ({ book }) => {
         },
         enabled: !!categoryString,
     });
-    console.log("Get related books:--->", relatedBooks)
 
     const handlePageClick = (page) => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     if (isLoading) {
-        return <div>Loading related books...</div>;
+        return (
+            <div className="w-full flex flex-col items-center justify-center py-10">
+                <BookCardSkeleton/>
+            </div>
+        );
     }
 
     if (isError || !categoryString) {

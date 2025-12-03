@@ -1,15 +1,18 @@
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const useCheckout = () => {
   const axiosInstance = axiosPrivateClient();
+  const [isError, setIsError] = useState(false);
 
   const handleCheckoutMutation = useMutation({
     mutationKey: ["handleCheckout"],
     mutationFn: async ({ book_id }) => {
       const response = await axiosInstance.post(
         `/auth/create/checkout-session`,
-        {book_id}
+        { book_id }
       );
       return response?.data;
     },
@@ -27,12 +30,14 @@ const useCheckout = () => {
         : console.error("checkout_url missing in API response:", data);
     },
     onError: (error) => {
-      // >>>
+      setIsError(error?.response?.data?.message || "Something went wrong!");
     },
   });
 
   return {
     handleCheckoutMutation,
+    isError,
+    setIsError
   };
 };
 export default useCheckout;
