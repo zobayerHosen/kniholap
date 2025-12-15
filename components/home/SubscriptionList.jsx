@@ -13,7 +13,7 @@ const SubscriptionList = () => {
         queryFn: async () => {
             const response = await axiosInstance.get(`/subscription/plan`);
             return response?.data?.data || [];
-        }
+        },
     });
     console.log("Get plans List Data:--->", getPlanListData);
 

@@ -8,7 +8,7 @@ export default function BookSubscription() {
   // Note: main ui component
   return (
     <div className="w-full container">
-      <SubscriptionPlanDetails />
+      <SubscriptionPlanDetails id={id}/>
     </div>
   );
 }
