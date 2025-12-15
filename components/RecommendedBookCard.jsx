@@ -18,6 +18,7 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
         category = {},
         is_bookmarked,
         subcategories = [],
+        type
     } = book || {};
     const [isBookMarked, setIsBookMarked] = useState(is_bookmarked)
 
@@ -82,9 +83,17 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                                     </span>
                                 ))}
                             </div>
-                            <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/`}>
-                                Read Now
-                            </CommonBtn>
+                            {
+                                type === "ebook" ? (
+                                    <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/library/book/${book?.slug}/read`}>
+                                        Read Now
+                                    </CommonBtn>
+                                ) : (
+                                    <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/library/book/${book?.slug}`}>
+                                        Details
+                                    </CommonBtn>
+                                )
+                            }
                         </div>
                     </div>
                 ) : (
@@ -138,9 +147,17 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                                     </span>
                                 ))}
                             </div>
-                            <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/`}>
-                                Read Now
-                            </CommonBtn>
+                            {
+                                type === "ebook" ? (
+                                    <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/library/book/${book?.slug}/read`}>
+                                        Read Now
+                                    </CommonBtn>
+                                ) : (
+                                    <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/library/book/${book?.slug}`}>
+                                        Details
+                                    </CommonBtn>
+                                )
+                            }
                         </div>
                     </div>
                 )

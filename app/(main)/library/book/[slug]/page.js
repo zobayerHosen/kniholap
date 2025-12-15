@@ -51,10 +51,14 @@ const BookDetails = async ({ params }) => {
             <div className="flex items-center">
               <StarRating rating={book?.total_rating_avg} />
               <span className="ml-2 flex items-center text-xs sm:text-base text-gray-500">
-                {book?.total_rating_avg || 0} ({book?.no_of_reviews || 0} reviews)
+                {book?.total_rating_avg || 0} ({book?.no_of_reviews || 0}{" "}
+                reviews)
               </span>
             </div>
-            <GiveReview book={book} className="w-fit bg-red-300 py-1.5! px-7! text-[#333] font-medium" />
+            <GiveReview
+              book={book}
+              className="w-fit bg-red-300 py-1.5! px-7! text-[#333] font-medium"
+            />
 
             {/* price */}
             <p className="text-base">

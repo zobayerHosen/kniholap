@@ -61,6 +61,7 @@ const Testimonials = () => {
             return response?.data?.data || [];
         }
     });
+    console.log("testimonila data", testimonialsData)
 
     // Note: main render
     return (
@@ -76,11 +77,18 @@ const Testimonials = () => {
                     gradientWidth={50}
                     gradientColor="#f5f5f9"
                     direction="left"
-                    className="min-h-[300px]"
+                    className="min-h-[350px]"
                 >
-                    {testimonialsData?.map((testimony, index) => (
-                        <TestimonyCard key={index} testimony={testimony} />
-                    ))}
+                    {
+                        testimonialsData?.length === 0 ? (
+                            <>No data found</>
+                        ) : (
+                            testimonialsData?.map((testimony, index) => (
+                                <TestimonyCard key={index} testimony={testimony} />
+                            ))
+                        )
+                    }
+                    { }
                 </Marquee>
             </div>
         </section>

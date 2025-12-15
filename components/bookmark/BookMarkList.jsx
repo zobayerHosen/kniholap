@@ -3,9 +3,23 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
-import { books } from "@/data";
 import BookCard from "../BookCard";
+import { useQuery } from "@tanstack/react-query";
+import { axiosPrivateClient } from "@/lib/axios.private.client";
+import BookmarkSkeleton from "../BookmarkSkeleton";
 const BookMarkList = () => {
+    const axiosInstance = axiosPrivateClient();
+
+    // Note: get all book mark list data
+    const { data: getBookmarksList, isLoading } = useQuery({
+        queryKey: ["getBookmarksList"],
+        queryFn: async () => {
+            const response = await axiosInstance.get(`/auth/wishlist/list`);
+            return response?.data?.data || [];
+        }
+    });
+
+    // Note: main ui component
     return (
         <Swiper
             modules={[Autoplay]}
@@ -16,25 +30,34 @@ const BookMarkList = () => {
             grabCursor={true}
             breakpoints={{
                 640: {
-                    slidesPerView: 1.1, // ✅ Use colon here
+                    slidesPerView: 1.1,
                 },
                 1024: {
-                    slidesPerView: 1.1, // ✅ Use colon here
+                    slidesPerView: 1.1,
                 },
                 1280: {
-                    slidesPerView: 1.2, // ✅ Use colon here
+                    slidesPerView: 1.2,
                 }
             }}
             className="w-full lg:mb-10 !px-1"
             autoplay={{ delay: 2500, disableOnInteraction: false }}
         >
-            {books.map((book, idx) => (
-                <SwiperSlide className="w-full" key={idx}>
-                    <BookCard layout="bookmark" book={book} />
-                </SwiperSlide>
-            ))}
+            {
+                isLoading ? (
+                    <div className="w-full grid grid-cols-1 ">
+                        {Array.from({ length: 1 }).map((_, i) => (
+                            <BookmarkSkeleton key={i} />
+                        ))}
+                    </div>
+                ) : (
+                    getBookmarksList?.map((book, idx) => (
+                        <SwiperSlide className="w-full" key={idx}>
+                            <BookCard layout="bookmark" book={book} />
+                        </SwiperSlide>
+                    ))
+                )
+            }
         </Swiper>
     )
-}
-
-export default BookMarkList
+};
+export default BookMarkList;

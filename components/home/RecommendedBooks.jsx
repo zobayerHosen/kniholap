@@ -24,13 +24,13 @@ const RecommendedBooks = () => {
                 {isLoading ? (
                     <RecommendedBookCardSkeleton />
                 ) : isError ? (
-                    <p>Error loading featured book</p>
+                    <p className="w-full text-center text-2xl font-medium pt-8">Error loading featured book</p>
                 ) : !getAllRecommendedBooks?.[0] ? (
                     <p>No featured book available</p>
                 ) : (
-                    <RecommendedBookCard 
-                        book={getAllRecommendedBooks[0]} 
-                        isFirstBook={true} 
+                    <RecommendedBookCard
+                        book={getAllRecommendedBooks[0]}
+                        isFirstBook={true}
                     />
                 )}
             </div>
@@ -50,15 +50,14 @@ const RecommendedBooks = () => {
                 </div>
             ) : (
                 getAllRecommendedBooks.slice(1).map((book) => (
-                    <RecommendedBookCard 
-                        key={book.id} 
-                        book={book} 
-                        isFirstBook={false} 
+                    <RecommendedBookCard
+                        key={book.id}
+                        book={book}
+                        isFirstBook={false}
                     />
                 ))
             )}
         </section>
     );
 };
-
 export default RecommendedBooks;
