@@ -16,6 +16,7 @@ const RecommendedBooks = () => {
         }
     });
 
+    // Note: Recommended book
     return (
         <section className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-20">
             {/* First book section */}
@@ -26,7 +27,7 @@ const RecommendedBooks = () => {
                 ) : isError ? (
                     <p className="w-full text-center text-2xl font-medium pt-8">Error loading featured book</p>
                 ) : !getAllRecommendedBooks?.[0] ? (
-                    <p>No featured book available</p>
+                    <p className="w-full text-start text-xl">No featured book available</p>
                 ) : (
                     <RecommendedBookCard
                         book={getAllRecommendedBooks[0]}
@@ -46,7 +47,7 @@ const RecommendedBooks = () => {
                 </div>
             ) : getAllRecommendedBooks?.length <= 1 ? (
                 <div className="col-span-2 lg:col-span-3 xl:col-span-4">
-                    <p>No additional books available</p>
+                    <p  className="w-full text-start text-xl">No additional books available</p>
                 </div>
             ) : (
                 getAllRecommendedBooks.slice(1).map((book) => (

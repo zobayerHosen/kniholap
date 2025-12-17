@@ -15,18 +15,18 @@ const CheckoutForm = () => {
     const stripe = useStripe();
     const elements = useElements();
     const { id } = useParams();
-    const navigate = useRouter();
-    const [searchParams] = useSearchParams();
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [isPaymentElementReady, setIsPaymentElementReady] = useState(false);
     const [error, setError] = useState(null);
     const [isProcessing, setIsProcessing] = useState(false);
     const [showCancelButton, setShowCancelButton] = useState(true);
     const { userData, userRefetch } = useAuth();
 
-    // Destructure user data
-    const { is_subscribed } = userData;
+    // Note: Destructure user data
+    // const { is_subscribed } = userData;
 
-    // Handle payment element ready state
+    // Note: Handle payment element ready state
     useEffect(() => {
         if (!elements) return;
 
@@ -51,16 +51,24 @@ const CheckoutForm = () => {
         };
     }, [elements]);
 
-    // Check for canceled param in URL
+    // Note: Check for canceled param in URL
     useEffect(() => {
-        if (searchParams.get('canceled') === 'true') {
-            toast.error('Payment was canceled. You can try again.');
+        if (!searchParams) return;
+
+        if (searchParams.get("canceled") === "true") {
+            toast.error("Payment was canceled. You can try again.");
+
             // Clean URL
-            window.history.replaceState({}, document.title, window.location.pathname);
+            window.history.replaceState(
+                {},
+                document.title,
+                window.location.pathname
+            );
         }
     }, [searchParams]);
 
-    // Create payment intent
+
+    // Note: Create payment intent
     const createPaymentIntent = useMutation({
         mutationFn: async () => {
             const res = await axiosInstance.post("/auth/subscription/setup-intent");
@@ -75,7 +83,7 @@ const CheckoutForm = () => {
         },
     });
 
-    // Handle subscription
+    // Note: Handle subscription
     const handleSubscription = useMutation({
         mutationFn: async ({ payment_method, plan_id, isUpdating }) => {
             // const endpoint = isUpdating ? "/auth/subscription/update" : "/auth/subscription/create";
@@ -90,7 +98,7 @@ const CheckoutForm = () => {
                 ? "Payment method updated successfully!"
                 : "Subscription activated successfully!";
             toast.success(message);
-            navigate("", { replace: true });
+            router("", { replace: true });
             userRefetch()
         },
         onError: (err) => {
@@ -99,7 +107,7 @@ const CheckoutForm = () => {
         },
     });
 
-    // Handle payment submission
+    // Note: Handle payment submission
     const handlePaymentSubmit = async (event) => {
         event.preventDefault();
         if (!stripe || !elements) {
@@ -110,28 +118,28 @@ const CheckoutForm = () => {
         setError(null);
         setShowCancelButton(false);
         try {
-            // Validate payment details
+            // Note: Validate payment details
             const { error: submitError } = await elements.submit();
             if (submitError) {
                 throw new Error(submitError.message || "Invalid payment details");
             }
-            // Create payment intent
+            // Note: Create payment intent
             const paymentIntentData = await createPaymentIntent.mutateAsync();
             const clientSecret = paymentIntentData?.client_secret;
             if (!clientSecret) {
                 throw new Error("Payment authorization failed");
             }
-            // Confirm payment with Stripe (remove return_url)
+            // Note: Confirm payment with Stripe (remove return_url)
             const { error: stripeError, setupIntent } = await stripe.confirmSetup({
                 elements,
                 clientSecret,
                 // Remove the confirmParams completely or keep it empty
                 redirect: "if_required", // Important for manual handling
             });
-            // Handle Stripe errors
+            // Note: Handle Stripe errors  // payment cancel page
             if (stripeError) {
                 if (stripeError.code === "setup_intent_canceled") {
-                    navigate('/company-dashboard/subscription/payment-canceled', {
+                    router('/', {
                         replace: true,
                         state: { fromAllowedPath: true }
                     });
@@ -139,15 +147,15 @@ const CheckoutForm = () => {
                 }
                 throw stripeError;
             }
-            // Process successful payment
+            // Note: Process successful payment
             if (setupIntent.status === "succeeded") {
                 await handleSubscription.mutateAsync({
                     payment_method: setupIntent.payment_method,
                     plan_id: id,
                     isUpdating: false, // give  "is_subscribed" if you want to go throw the check page when switching plan current backend handles it so it false 
                 });
-                // Manual navigation to success page with state
-                navigate("/company-dashboard/subscription/payment-success", {
+                // Note: Manual navigation to success page with state  // payment success page
+                router("/", {
                     replace: true,
                     state: { fromAllowedPath: true }
                 });
@@ -160,7 +168,8 @@ const CheckoutForm = () => {
             setShowCancelButton(true);
         }
     };
-    // main component
+
+    // Note: main component
     return (
         <div className="relative w-full flex flex-col gap-8 justify-start items-center">
             <form className="w-full flex flex-col gap-6" onSubmit={handlePaymentSubmit}>
@@ -190,7 +199,8 @@ const CheckoutForm = () => {
                         ) : (
                             <>
                                 <FiLock className="text-lg" />
-                                {is_subscribed ? "Update Payment" : "Subscribe Now"}
+                                {/* {is_subscribed ? "Update Payment" : "Subscribe Now"} */}
+                                Subscribe Now
                             </>
                         )}
                     </motion.button>

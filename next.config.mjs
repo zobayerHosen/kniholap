@@ -21,7 +21,8 @@ const nextConfig = {
                 ? [
                     {
                         protocol: "https",
-                        hostname: new URL(process.env.NEXT_PUBLIC_BASE_URL).hostname,
+                        // hostname: new URL(process.env.NEXT_PUBLIC_BASE_URL).hostname,
+                        hostname: "marikbtv.reigeeky.com",
                         port: "",
                         pathname: "/**",                    // Allow all paths under your base URL
                         // Or be more strict:

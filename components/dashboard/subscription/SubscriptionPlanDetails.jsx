@@ -1,21 +1,32 @@
 "use client";
+
 import { axiosPrivateClient } from "@/lib/axios.private.client";
+import { loadStripe } from "@stripe/stripe-js";
 import { useQuery } from "@tanstack/react-query";
+import { FiCreditCard, FiLoader } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Elements } from "@stripe/react-stripe-js";
-import { FiAlertCircle, FiCreditCard, FiLoader } from "react-icons/fi";
-import { FaLock } from "react-icons/fa6";
 import CheckoutForm from "./CheckoutForm";
+import { FaLock } from "react-icons/fa";
 
-const SubscriptionPlanDetails = ({ id }) => {
+const SubscriptionPlanDetails = ({ id: plan_id }) => {
     const axiosInstance = axiosPrivateClient();
-    const { data: planInfo, isLoading } = useQuery({
+    const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+
+    // Note: check is stripePromise not found
+    if (!stripePromise) {
+        throw new Error("Stripe publishable key is missing");
+    }
+
+    // Note: get plan details
+    const { data: planInfo, isLoading, isFetching, isError, refetch } = useQuery({
         queryKey: ["plan_data"],
         queryFn: async () => {
-            const response = await axiosInstance.get(``);
-            return response?.data;
+            const response = await axiosInstance.get(`/subscription/plan/${plan_id}`);
+            return response?.data?.data;
         }
     });
+    console.log("Plan info:--->", planInfo)
 
     // Note: Modern Stripe Elements appearance configuration
     const stripeOptions = {
@@ -147,7 +158,7 @@ const SubscriptionPlanDetails = ({ id }) => {
                             transition={{ duration: 0.5 }}
                             className="w-full max-w-6xl mx-auto flex flex-col gap-3 sm:gap-5 min-h-[60vh]"
                         >
-                            <p>Brixl Subscription Plans!</p>
+                            <p className="text-center xl:text-3xl text-2xl ">Kniholap Subscription Plans!</p>
 
                             {/* plan information  */}
                             <div className="w-full flex flex-col gap-3 justify-start items-center">
@@ -164,6 +175,50 @@ const SubscriptionPlanDetails = ({ id }) => {
                                         Complete your subscription with secure payment
                                     </p>
                                 </div>
+
+                                {/* specific Plan details */}
+                                <div className="w-full border border-gray-200 rounded-lg p-5 bg-gray-50">
+                                    <h2 className="text-xl font-semibold text-gray-900">
+                                        {planInfo?.name}
+                                    </h2>
+
+                                    <p className="text-gray-600 mt-1 capitalize">
+                                        Billed {planInfo?.interval}
+                                    </p>
+
+                                    <div className="mt-4 flex items-end gap-2">
+                                        <span className="text-3xl font-bold text-gray-900">
+                                            ${planInfo?.price}
+                                        </span>
+                                        <span className="text-gray-500 text-sm">
+                                            / {planInfo?.interval}
+                                        </span>
+                                    </div>
+
+                                    {/* Trial info */}
+                                    {planInfo?.trial_days > 0 && (
+                                        <p className="mt-2 text-sm text-green-600">
+                                            {planInfo?.trial_days} days free trial
+                                        </p>
+                                    )}
+
+                                    {/* Features */}
+                                    <div className="mt-5">
+                                        <h4 className="text-sm font-semibold text-gray-700 mb-2">
+                                            What’s included
+                                        </h4>
+
+                                        <ul className="space-y-2">
+                                            {planInfo?.features?.map((item) => (
+                                                <li key={item.id} className="flex items-center gap-2 text-sm text-gray-600">
+                                                    <span className="text-green-500">✔</span>
+                                                    {item?.feature}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+
                                 {/* form */}
                                 <Elements stripe={stripePromise} options={stripeOptions}>
                                     <CheckoutForm />
