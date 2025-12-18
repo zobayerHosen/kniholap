@@ -1,7 +1,9 @@
-import React from "react";
+import PaymentSuccess from "./components/PaymentSuccess";
 
 export default function PaymentSuccessPage() {
-  return <div>
-    
-  </div>;
+  return (
+    <>
+      <PaymentSuccess />
+    </>
+  );
 }

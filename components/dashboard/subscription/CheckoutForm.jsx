@@ -25,6 +25,7 @@ const CheckoutForm = () => {
 
     // Note: Destructure user data
     // const { is_subscribed } = userData;
+    console.log("User data:---->", userData);
 
     // Note: Handle payment element ready state
     useEffect(() => {
@@ -96,11 +97,12 @@ const CheckoutForm = () => {
                 ? "Payment method updated successfully!"
                 : "Subscription activated successfully!";
             toast.success(message);
-            router("/", { replace: true });
+            router.push("/payment-success",);
             userRefetch()
         },
         onError: (err) => {
             console.error("Subscription error:", err);
+            // setError(err?.response?.data?.message)
             toast.error(err?.response?.data?.message || "Subscription processing failed. Please contact support.");
         },
     });
@@ -137,10 +139,7 @@ const CheckoutForm = () => {
             // Note: Handle Stripe errors  // payment cancel page
             if (stripeError) {
                 if (stripeError.code === "setup_intent_canceled") {
-                    router('/payment-cancel', {
-                        replace: true,
-                        state: { fromAllowedPath: true }
-                    });
+                    router.push('/payment-cancel');
                     return;
                 }
                 throw stripeError;
@@ -152,14 +151,11 @@ const CheckoutForm = () => {
                     plan_id: id,
                     isUpdating: false, // give  "is_subscribed" if you want to go throw the check page when switching plan current backend handles it so it false 
                 });
-                // Note: Manual navigation to success page with state  // payment success page
-                router("/payment-success", {
-                    replace: true,
-                    state: { fromAllowedPath: true }
-                });
+                // Note: Manual navigation to success page with state  // payment success page 
+                router.push("/payment-success");
             }
         } catch (err) {
-            setError(err.message || "Payment processing failed");
+            setError(err.response?.data?.message || "Payment processing failed");
             console.error("Payment error:", err);
         } finally {
             setIsProcessing(false);
@@ -185,7 +181,7 @@ const CheckoutForm = () => {
                 {isPaymentElementReady && (
                     <motion.button
                         type="submit"
-                        className="px-8 w-full justify-center py-4.5 rounded bg-gradient-to-r cursor-pointer from-indigo-600 to-indigo-700 text-white font-semibold flex items-center gap-2 hover:from-indigo-500 hover:to-indigo-600 transition-all duration-200 shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+                        className="px-8 w-full justify-center py-4.5 rounded cursor-pointer bg-[#F84E12] text-white font-semibold flex items-center gap-2 hover:from-indigo-500 hover:to-indigo-600 transition-all duration-200 shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
                         disabled={!stripe || isProcessing || handleSubscription.isPending}
                         whileTap={{ scale: !isProcessing ? 0.98 : 1 }}
                     >
@@ -213,7 +209,7 @@ const CheckoutForm = () => {
                         <FiAlertCircle className="flex-shrink-0 mt-0.5 text-xl" />
                         <div className="w-full  flex flex-col relative">
                             <p className="font-medium">Payment issue</p>
-                            <p className="text-sm">{error}</p>
+                            <p className="text-sm">{error?.response?.data?.message}</p>
                         </div>
                         <button
                             onClick={() => setError(null)}
