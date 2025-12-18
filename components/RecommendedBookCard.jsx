@@ -6,6 +6,7 @@ import Image from "next/image";
 import useBookMarks from "@/hooks/bookmarks.hook";
 import { useState } from "react";
 import dummyImage from "@/public/dummyImage.png"
+import DOMPurify from 'dompurify';
 
 const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
     const { handleBookMarksMutation } = useBookMarks();
@@ -23,6 +24,8 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
         type
     } = book || {};
     const [isBookMarked, setIsBookMarked] = useState(is_bookmarked);
+
+    const descriptionSanitized = DOMPurify.sanitize(description)
 
     // Note: convert cover image to null if this empty image
     const src = cover_image ? cover_image : null
@@ -79,7 +82,8 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                                 <StarRating rating={rating} />
                                 <span className="font-medium text-sm sm:text-xl">{Number(rating).toFixed(1)}</span>
                             </div>
-                            <p className="sm:text-base text-sm sm:h-full line-clamp-3 md:line-clamp-8">{description}</p>
+                            <p className="sm:text-base text-sm sm:h-full line-clamp-3 md:line-clamp-8" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
+                            {/* <div dangerouslySetInnerHTML={{__html: descriptionSanitized}}/> */}
                             <div className="w-full flex  flex-wrap gap-2">
                                 {subcategories.map((category) => (
                                     <span className="border flex sm:text-base text-xs capitalize font-medium justify-center items-center px-2 sm:px-5 py-1 sm:py-2 rounded-full" key={category.id}>
@@ -143,7 +147,9 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                                 <StarRating rating={rating} />
                                 <span className="font-medium text-sm sm:text-xl">{Number(rating).toFixed(1)}</span>
                             </div>
-                            <p className="sm:text-base text-sm line-clamp-3">{description}</p>
+                            {/* <p className="sm:text-base text-sm line-clamp-3">{description}</p> */}
+                            <p className="sm:text-base text-sm line-clamp-3" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
+                            
                             <div className="w-full flex  flex-wrap gap-2">
                                 {subcategories.map((category, index) => (
                                     <span className="border flex sm:text-base text-xs capitalize font-medium justify-center items-center px-2 sm:px-5 py-1 sm:py-2 rounded-full" key={category.id}>

@@ -5,6 +5,7 @@ import { FaRegBookmark, FaBookmark } from "react-icons/fa6";
 import { useState } from "react";
 import dummyImage from "@/public/dummyImage.png"
 import useBookMarks from "@/hooks/bookmarks.hook";
+import DOMPurify from 'dompurify';
 const BookCard = ({ book = {}, layout }) => {
     const { handleBookMarksMutation } = useBookMarks();
 
@@ -28,6 +29,7 @@ const BookCard = ({ book = {}, layout }) => {
     } = book || {}
     const [imgSrc, setImgSrc] = useState(cover_image || dummyImage);
     const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
+    const descriptionSanitized = DOMPurify.sanitize(description)
     const handleBookmark = () => {
         handleBookMarksMutation.mutate({ book_id: id });
         setIsBookmarked(!isBookmarked);
@@ -63,7 +65,8 @@ const BookCard = ({ book = {}, layout }) => {
                         </button>
                     </div>
                     <div className="w-full h-full">
-                        <p className="md:text-base text-sm line-clamp-2 md:line-clamp-3 lg:line-clamp-6">{description}</p>
+                        {/* <p className="md:text-base text-sm line-clamp-2 md:line-clamp-3 lg:line-clamp-6">{description}</p> */}
+                        <p className="md:text-base text-sm line-clamp-2 md:line-clamp-3 lg:line-clamp-6" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
                     </div>
                     <CommonBtn
                         className={`rounded-full !min-h-auto !h-[48px]`}
