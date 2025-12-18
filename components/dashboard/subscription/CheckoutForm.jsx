@@ -137,7 +137,7 @@ const CheckoutForm = () => {
             // Note: Handle Stripe errors  // payment cancel page
             if (stripeError) {
                 if (stripeError.code === "setup_intent_canceled") {
-                    router('/', {
+                    router('/payment-cancel', {
                         replace: true,
                         state: { fromAllowedPath: true }
                     });
@@ -153,7 +153,7 @@ const CheckoutForm = () => {
                     isUpdating: false, // give  "is_subscribed" if you want to go throw the check page when switching plan current backend handles it so it false 
                 });
                 // Note: Manual navigation to success page with state  // payment success page
-                router("/", {
+                router("/payment-success", {
                     replace: true,
                     state: { fromAllowedPath: true }
                 });
