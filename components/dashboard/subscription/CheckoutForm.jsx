@@ -67,7 +67,6 @@ const CheckoutForm = () => {
         }
     }, [searchParams]);
 
-
     // Note: Create payment intent
     const createPaymentIntent = useMutation({
         mutationFn: async () => {
@@ -75,7 +74,7 @@ const CheckoutForm = () => {
             if (!res.data?.data) {
                 throw new Error("Failed to create payment intent");
             }
-            return res.data.data;
+            return res?.data?.data;
         },
         onError: (err) => {
             console.error("Payment intent creation failed:", err);
@@ -86,19 +85,18 @@ const CheckoutForm = () => {
     // Note: Handle subscription
     const handleSubscription = useMutation({
         mutationFn: async ({ payment_method, plan_id, isUpdating }) => {
-            // const endpoint = isUpdating ? "/auth/subscription/update" : "/auth/subscription/create";
-            const res = await axiosInstance.post("", { payment_method, plan_id });
+            const res = await axiosInstance.post("/auth/subscription/create", { payment_method, plan_id });
             if (!res.data) {
                 throw new Error("Subscription operation failed");
             }
-            return res.data;
+            return res?.data;
         },
         onSuccess: (_, variables) => {
             const message = variables.isUpdating
                 ? "Payment method updated successfully!"
                 : "Subscription activated successfully!";
             toast.success(message);
-            router("", { replace: true });
+            router("/", { replace: true });
             userRefetch()
         },
         onError: (err) => {

@@ -32,7 +32,7 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
     const stripeOptions = {
         mode: 'subscription',
         currency: 'usd',
-        amount: planInfo?.price || 5,
+        amount: 50 ,  // planInfo?.price || 5
         paymentMethodCreation: 'manual',
         paymentMethodTypes: ['card'],
         appearance: {
