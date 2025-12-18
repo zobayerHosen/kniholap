@@ -6,9 +6,13 @@ import Image from "next/image";
 import { useOptions } from "@/hooks/options.hook";
 import EmptyState from "../common/EmptyState.";
 import ErrorState from "../common/ErrorState";
+import { useState } from "react";
+import dummyImage from "@/public/dummyImage.png"
 
 const BookCategories = () => {
     const { categoryList, categoryListError, categoryListLoading } = useOptions();
+
+    const [imageURL, setImageURL] = useState(categoryList?.image || dummyImage)
 
     // Skeleton Card Component
     const CategorySkeleton = () => (
@@ -20,6 +24,7 @@ const BookCategories = () => {
         </div>
     );
 
+    // Note: main UI component
     return (
         <section className="w-full flex flex-col items-center justify-start py-10">
             <SectionTitle text="Available Book Category" />
@@ -64,11 +69,12 @@ const BookCategories = () => {
                                 {/* Cover Image - You can use a placeholder or featured book cover */}
                                 <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg">
                                     <Image
-                                        src={category.image} // fallback image
+                                        src={imageURL}
                                         alt={category.title || "Category"}
                                         width={400}
                                         height={500}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        onError={() => setImageURL(dummyImage)}
                                     />
                                 </div>
                             </div>

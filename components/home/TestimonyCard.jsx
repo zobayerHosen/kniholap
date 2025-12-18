@@ -1,6 +1,7 @@
 "use client";
-
+import { useState } from "react";
 import StarRating from "../common/StarRating";
+import dummyImage from "@/public/dummyImage.png"
 
 const TestimonyCard = ({ testimony = {} }) => {
     const {
@@ -11,11 +12,13 @@ const TestimonyCard = ({ testimony = {} }) => {
         review
     } = testimony || {};
 
+    const [imageURL, setImageURL] = useState(avatar || dummyImage.src)
+
     // Note: Main ui component
     return (
         <div className="w-[260px] sm:w-[300px] min-h-[300px]  mx-3 bg-white shadow-lg rounded-2xl p-3 sm:p-6 flex flex-col items-center text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
             <div className="sm:size-20 size-14 rounded-full overflow-hidden border-2 sm:border-4 border-primary mb-4">
-                <img src={avatar} alt={name} className="w-full h-full object-cover" />
+                <img src={imageURL} alt={name} className="w-full h-full object-cover" onError={() => setImageURL(dummyImage)} />
             </div>
 
             <h3 className="sm:text-xl text-lg font-semibold text-gray-800">{name}</h3>

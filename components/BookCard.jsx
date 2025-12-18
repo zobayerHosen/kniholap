@@ -36,7 +36,7 @@ const BookCard = ({ book = {}, layout }) => {
         return (
             <div className="w-full p-4 md:p-6 rounded-3xl border flex sm:flex-row flex-col justify-start gap-4 md:gap-8 border-black/20">
                 <div className="lg:w-96 sm:w-[250px] h-[250px] lg:h-96 shrink-0 rounded-lg overflow-hidden">
-                    <img src={imgSrc} alt={title} className="w-full h-full object-cover hover:scale-110 transition-all ease-in-out duration-500"
+                    <img src={imgSrc || dummyImage} alt={title} className="w-full h-full object-cover hover:scale-110 transition-all ease-in-out duration-500"
                         onError={() => setImgSrc(dummyImage.src)}
                     />
                 </div>

@@ -4,6 +4,7 @@ import RecommendedBookCard from "../RecommendedBookCard";
 import { useQuery } from "@tanstack/react-query";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import RecommendedBookCardSkeleton from "./RecommendedBookCardSkeleton";
+import Error from "@/app/global-error";
 
 const RecommendedBooks = () => {
     const axiosInstance = axiosPrivateClient();
@@ -22,9 +23,7 @@ const RecommendedBooks = () => {
             {/* First book section */}
             <div className="w-full sm:col-span-2 flex flex-col gap-4 lg:gap-10">
                 <SectionTitle text="Recommended for you" />
-                {isLoading ? (
-                    <RecommendedBookCardSkeleton />
-                ) : isError ? (
+                {isError ? (
                     <p className="w-full text-center text-2xl font-medium pt-8">Error loading featured book</p>
                 ) : !getAllRecommendedBooks?.[0] ? (
                     <p className="w-full text-start text-xl">No featured book available</p>
@@ -43,11 +42,11 @@ const RecommendedBooks = () => {
                 ))
             ) : isError ? (
                 <div className="col-span-2 lg:col-span-3 xl:col-span-4">
-                    <p>Error loading other books</p>
+                    <Error />
                 </div>
             ) : getAllRecommendedBooks?.length <= 1 ? (
                 <div className="col-span-2 lg:col-span-3 xl:col-span-4">
-                    <p  className="w-full text-start text-xl">No additional books available</p>
+                    <p className="w-full text-start text-xl">No additional books available</p>
                 </div>
             ) : (
                 getAllRecommendedBooks.slice(1).map((book) => (

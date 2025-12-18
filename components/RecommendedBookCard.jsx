@@ -5,6 +5,8 @@ import CommonBtn from "./common/CommonBtn";
 import Image from "next/image";
 import useBookMarks from "@/hooks/bookmarks.hook";
 import { useState } from "react";
+import dummyImage from "@/public/dummyImage.png"
+
 const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
     const { handleBookMarksMutation } = useBookMarks();
     // Note: destructuring all data
@@ -20,10 +22,11 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
         subcategories = [],
         type
     } = book || {};
-    const [isBookMarked, setIsBookMarked] = useState(is_bookmarked)
+    const [isBookMarked, setIsBookMarked] = useState(is_bookmarked);
 
     // Note: convert cover image to null if this empty image
     const src = cover_image ? cover_image : null
+    const [imageURL, setImageURL] = useState(src || dummyImage);
 
     const handleBookmark = () => {
         handleBookMarksMutation.mutate({ book_id: id });
@@ -39,14 +42,15 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                         <div className="sm:w-1/2 w-full relative flex rounded-xl overflow-hidden justify-center h-48  sm:h-full">
                             {src ? (
                                 <Image
-                                    src={src}
+                                    src={imageURL}
                                     alt={title}
                                     className="w-full h-full object-cover"
                                     width={480}
                                     height={480}
+                                    onError={() => setImageURL(dummyImage)}
                                 />
                             ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <div className="w-full h-full bg-white flex items-center justify-center">
                                     <span>No Cover Image</span>
                                 </div>
                             )}
@@ -102,14 +106,15 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                         <div className="w-full shadow-md rounded-2xl overflow-hidden h-48 sm:h-60 shrink-0 relative flex justify-center -mt-16">
                             {src ? (
                                 <Image
-                                    src={src}
+                                    src={imageURL}
                                     alt={title}
                                     className="w-full h-full object-cover"
                                     width={480}
                                     height={480}
+                                    onError={() => setImageURL(dummyImage)}
                                 />
                             ) : (
-                                <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                <div className="w-full h-full bg-white flex items-center justify-center">
                                     <span>No Cover Image</span>
                                 </div>
                             )}
@@ -127,7 +132,6 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                                     ) : (
                                         <FaRegBookmark className="" />
                                     )}
-
                                 </button>
                             </div>
                         </div>
