@@ -4,8 +4,10 @@ import ReviewCard from "./ReviewCard";
 import { useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
 import { FaChevronLeft } from "react-icons/fa";
+import { axiosPrivateClient } from "@/lib/axios.private.client";
+import { useQuery } from "@tanstack/react-query";
 
-
+// Note: dummy review data
 const reviewsData = [
     {
         id: 1,
@@ -45,8 +47,18 @@ const reviewsData = [
 ];
 
 const DashboardReviews = () => {
+    const axiosInstance = axiosPrivateClient();
     const [startIndex, setStartIndex] = useState(0);
     const visibleCount = 3;
+
+    const { data: getReviewData } = useQuery({
+        queryKey: ["personal-review"],
+        queryFn: async () => {
+            const response = await axiosInstance.get(`/auth/seller/review/list`);
+            return response?.data?.data;
+        }
+    });
+    console.log("Personal review:--->", getReviewData);
 
     // Note: handle Next
     const handleNext = () => {
@@ -70,7 +82,7 @@ const DashboardReviews = () => {
 
             {/* Review List */}
             <div className="w-full mt-6 grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
-                {visibleReviews?.map((review) => (
+                {getReviewData?.map((review) => (
                     <ReviewCard key={review.id} review={review} />
                 ))}
             </div>

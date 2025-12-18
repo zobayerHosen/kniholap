@@ -10,7 +10,7 @@ import { Switch } from 'antd';
 import UserInfo from "./UserInfo";
 import PersonalInformation from "./PersonalInformation";
 import { useUser } from "@/hooks/get-user.hook";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import toast from "react-hot-toast";
 
