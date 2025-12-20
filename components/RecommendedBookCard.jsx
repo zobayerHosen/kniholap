@@ -7,9 +7,13 @@ import useBookMarks from "@/hooks/bookmarks.hook";
 import { useState } from "react";
 import dummyImage from "@/public/dummyImage.png"
 import DOMPurify from 'dompurify';
+import Cookies from "js-cookie";
+import AuthRequiredModal from "./common/AuthRequiredModal";
 
 const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
+    const [showAuthModal, setShowAuthModal] = useState();
     const { handleBookMarksMutation } = useBookMarks();
+
     // Note: destructuring all data
     const {
         id,
@@ -32,6 +36,14 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
     const [imageURL, setImageURL] = useState(src || dummyImage);
 
     const handleBookmark = () => {
+        const token = Cookies.get(
+            process.env.AUTH_TOKEN_NAME || "kniholap_auth_token"
+        );
+        // Note: token check
+        if (!token) {
+            setShowAuthModal(true);
+            return;
+        };
         handleBookMarksMutation.mutate({ book_id: id });
         setIsBookMarked((prev) => !prev);
     };
@@ -149,7 +161,7 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                             </div>
                             {/* <p className="sm:text-base text-sm line-clamp-3">{description}</p> */}
                             <p className="sm:text-base text-sm line-clamp-3" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
-                            
+
                             <div className="w-full flex  flex-wrap gap-2">
                                 {subcategories.map((category, index) => (
                                     <span className="border flex sm:text-base text-xs capitalize font-medium justify-center items-center px-2 sm:px-5 py-1 sm:py-2 rounded-full" key={category.id}>
@@ -172,6 +184,10 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                     </div>
                 )
             }
+            <AuthRequiredModal
+                isOpen={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+            />
         </>
     )
 };
