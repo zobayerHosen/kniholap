@@ -11,6 +11,9 @@ import { FaCoins } from "react-icons/fa";
 import { IoSettingsOutline } from "react-icons/io5";
 import { TbLogout2 } from "react-icons/tb";
 import { useState } from "react";
+import { useAuth } from "@/hooks/auth.hook";
+import ConfirmLogoutModal from "@/components/common/ConfirmLogoutModal";
+
 
 // Note: Dashboard sidebar navlist items
 const navlistItems = [
@@ -41,14 +44,16 @@ const navlistItems = [
     },
     {
         label: "Logout",
-        href: "/",
-        icon: <TbLogout2 />
+        icon: <TbLogout2 />,
+        isButton: true
     }
 ];
 
 const Sidebar = () => {
     const pathName = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const { logout } = useAuth()
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -61,7 +66,7 @@ const Sidebar = () => {
     // Note: main ui component
     return (
         <>
-            {/* Mobile toggle button - only visible below xl screen */}
+            {/* Mobile toggle button */}
             <button
                 className={`fixed cursor-pointer top-44 left-0 z-50 xl:hidden bg-[#A5340C] text-white p-2 rounded-tr-lg rounded-br-lg shadow-lg ${isSidebarOpen ? 'hidden' : 'block'}`}
                 onClick={toggleSidebar}
@@ -79,11 +84,7 @@ const Sidebar = () => {
 
             {/* Sidebar */}
             <aside className={`
-                fixed xl:relative
-                top-0 left-0
-                w-full max-w-[300px] h-screen bg-[#A5340C] px-6 py-5
-                transform transition-transform duration-300 ease-in-out z-40
-                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'}
+                fixed xl:relative top-0 left-0 w-full max-w-[300px] h-screen bg-[#A5340C] px-6 py-5 transform transition-transform duration-300 ease-in-out z-40 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full xl:translate-x-0'}
             `}>
                 {/* logo and collapsed icon */}
                 <div className="w-full flex items-center justify-between border-b border-[#f6ebe794]">
@@ -113,6 +114,23 @@ const Sidebar = () => {
                 <nav className="flex flex-col gap-3 items-start mt-9">
                     {navlistItems?.map((item, idx) => {
                         const isActive = pathName === item?.href;
+
+                        // Note: logout button
+                        if (item?.isButton) {
+                            return (
+                                <button
+                                    key={idx}
+                                    onClick={() => setShowLogoutModal(true)}
+                                    title="Sign Out"
+                                    className="cursor-pointer w-full flex items-center gap-2 px-4 py-2 rounded-lg text-xl text-white hover:bg-[#ffffff33] transition-all"
+                                >
+                                    <span className="text-lg">{item.icon}</span>
+                                    {item.label}
+                                </button>
+                            )
+                        }
+
+                        // Note: other nav list
                         return (
                             <Link
                                 key={idx}
@@ -130,6 +148,20 @@ const Sidebar = () => {
                     })}
                 </nav>
             </aside>
+
+            <ConfirmLogoutModal
+                isOpen={showLogoutModal}
+                onClose={() => setShowLogoutModal(false)}
+                onConfirm={() =>
+                    logout.mutate(undefined, {
+                        onSuccess: () => {
+                            setShowLogoutModal(false);
+                            closeSidebar(false)
+                        }
+                    })
+                }
+                isLoading={logout.isPending}
+            />
         </>
     );
 };
