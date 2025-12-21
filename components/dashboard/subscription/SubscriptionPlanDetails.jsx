@@ -2,14 +2,27 @@
 
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { loadStripe } from "@stripe/stripe-js";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FiCreditCard, FiLoader } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { FaLock } from "react-icons/fa";
+import { useUser } from "@/hooks/get-user.hook";
+import toast from "react-hot-toast";
 
 const SubscriptionPlanDetails = ({ id: plan_id }) => {
+    const { userData } = useUser();
+    const isCancelled = userData?.is_cancelled === true;
+    const queryClient = useQueryClient();
+    console.log("User data:--->", userData);
+
+    const hasActiveSubscription =
+        userData?.is_subscribed &&
+        userData?.is_subscription_active &&
+        userData?.subscription_status === "active";
+
+
     const axiosInstance = axiosPrivateClient();
     const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -26,13 +39,13 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
             return response?.data?.data;
         }
     });
-    console.log("Plan info:--->", planInfo)
+    // console.log("Plan info:--->", planInfo)
 
     // Note: Modern Stripe Elements appearance configuration
     const stripeOptions = {
         mode: 'subscription',
         currency: 'usd',
-        amount:  planInfo?.price || 5,  // 
+        amount: planInfo?.price || 5,  // 
         paymentMethodCreation: 'manual',
         paymentMethodTypes: ['card'],
         appearance: {
@@ -92,9 +105,121 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
             }
         }
     }
+
+    // Note: payment cancel mutation
+    const paymentCancelMutation = useMutation({
+        mutationKey: ["payment-cancel"],
+        mutationFn: async () => {
+            const formData = new FormData()
+            formData.append(plan_id, userData?.subscription_plan_id)
+            const response = await axiosInstance.post(`/auth/subscription/cancel`, formData, {
+                headers: {
+                    "Content-type": "multipart/form-data"
+                }
+            });
+            return response?.data;
+        },
+        onSuccess: (data) => {
+            toast.success(data?.message || "Payment cancel successfully");
+            queryClient.invalidateQueries({ queryKey: ["userData"], exact: true })
+        },
+        onError: (err) => {
+            toast.error(err?.response?.data?.message || "Something went wrong!");
+        }
+    });
+
+    const handleCancelSubscription = () => {
+        if (!userData?.subscription_plan_id) {
+            toast.error("Invalid subscription plan");
+            return;
+        }
+        paymentCancelMutation.mutate();
+    };
+
+    // Note: update plan 
+    const updatePlanSubscription = useMutation({
+        mutationKey: ["update-plan"],
+        mutationFn: async () => {
+            const formData = new FormData();
+            formData.append("plan_id", plan_id);
+
+            const response = await axiosInstance.post(
+                `/auth/subscription/update`,
+                formData
+            );
+
+            return response?.data;
+        },
+        onSuccess: (data) => {
+            toast.success(data?.message || "Plan updated successfully");
+            queryClient.invalidateQueries({ queryKey: ["userData"] });
+        },
+        onError: (err) => {
+            toast.error(err?.response?.data?.message || "Something went wrong!");
+        }
+    });
+
+    // Note: submit update subscription handler
+    const handleUpdateSubscription = () => {
+        if (!userData?.subscription_plan_id) {
+            toast.error("Invalid subscription plan");
+            return;
+        }
+        updatePlanSubscription.mutate();
+    };
+
     // Note: main ui component
     return (
         <div className="w-full mt-4">
+            {/* payment information checkout */}
+            {hasActiveSubscription && (
+                <div className="w-full border border-green-200 bg-green-50 rounded-lg p-5">
+                    <h3 className="text-lg font-semibold text-green-800">
+                        Your Current Plan
+                    </h3>
+
+                    <div className="mt-3">
+                        <p className="text-gray-700 font-medium">
+                            {userData?.subscription_plan}
+                        </p>
+
+                        <p className="text-sm text-gray-600 mt-1">
+                            Price: ${userData?.subscription_price} / {planInfo?.interval}
+                        </p>
+
+                        <p className="text-sm text-green-600 mt-1 capitalize">
+                            Status: {userData?.subscription_status}
+                        </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="mt-4 flex gap-3 flex-wrap">
+                        <button
+                            onClick={handleUpdateSubscription}
+                            disabled={updatePlanSubscription?.isPending}
+                            className="px-4 py-2 bg-primary text-white rounded-md"
+                        >
+                            {updatePlanSubscription?.isPending ? "Updating..." : "Plan Update"}
+                        </button>
+
+                        {!isCancelled ? (
+                            <button
+                                onClick={handleCancelSubscription}
+                                disabled={paymentCancelMutation.isPending}
+                                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md"
+                            >
+                                {paymentCancelMutation.isPending ? "Cancelling..." : "Cancel Subscription"}
+                            </button>
+                        ) : (
+                            <span className="px-4 py-2 bg-gray-300 text-gray-600 rounded-md cursor-not-allowed">
+                                Subscription Cancelled
+                            </span>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* sripe payment input field */}
             {
                 isLoading || isFetching ? (
                     <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -156,9 +281,9 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ duration: 0.5 }}
-                            className="w-full max-w-6xl mx-auto flex flex-col gap-3 sm:gap-5 min-h-[60vh]"
+                            className="w-full mx-auto flex flex-col gap-3 sm:gap-5 min-h-[60vh]"
                         >
-                            <p className="text-center xl:text-3xl text-2xl ">Kniholap Subscription Plans!</p>
+                            <p className="text-center xl:text-3xl text-2xl mt-10">Kniholap Subscription Plans!</p>
 
                             {/* plan information  */}
                             <div className="w-full flex flex-col gap-3 justify-start items-center">
@@ -220,6 +345,9 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
                                 </div>
 
                                 {/* form */}
+                                {/* {hasActiveSubscription && <CurrentPlanCard />} */}
+
+                                {/* Stripe checkout */}
                                 <Elements stripe={stripePromise} options={stripeOptions}>
                                     <CheckoutForm />
                                 </Elements>

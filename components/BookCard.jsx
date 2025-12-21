@@ -5,7 +5,7 @@ import { FaRegBookmark, FaBookmark } from "react-icons/fa6";
 import { useState } from "react";
 import dummyImage from "@/public/dummyImage.png"
 import useBookMarks from "@/hooks/bookmarks.hook";
-import DOMPurify from 'dompurify';
+import DOMPurify from "isomorphic-dompurify";
 const BookCard = ({ book = {}, layout }) => {
     const { handleBookMarksMutation } = useBookMarks();
 
@@ -29,7 +29,7 @@ const BookCard = ({ book = {}, layout }) => {
     } = book || {}
     const [imgSrc, setImgSrc] = useState(cover_image || dummyImage);
     const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
-    const descriptionSanitized = DOMPurify.sanitize(description)
+    const descriptionSanitized = DOMPurify.sanitize(description || "")
     const handleBookmark = () => {
         handleBookMarksMutation.mutate({ book_id: id });
         setIsBookmarked(!isBookmarked);
