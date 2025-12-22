@@ -12,7 +12,7 @@ import { useUser } from "@/hooks/get-user.hook";
 import toast from "react-hot-toast";
 
 const SubscriptionPlanDetails = ({ id: plan_id }) => {
-    const { userData } = useUser();
+    const { userData, userRefetch } = useUser();
     const isCancelled = userData?.is_cancelled === true;
     const queryClient = useQueryClient();
     console.log("User data:--->", userData);
@@ -121,7 +121,7 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
         },
         onSuccess: (data) => {
             toast.success(data?.message || "Payment cancel successfully");
-            queryClient.invalidateQueries({ queryKey: ["userData"], exact: true })
+            userRefetch()
         },
         onError: (err) => {
             toast.error(err?.response?.data?.message || "Something went wrong!");
@@ -152,7 +152,7 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
         },
         onSuccess: (data) => {
             toast.success(data?.message || "Plan updated successfully");
-            queryClient.invalidateQueries({ queryKey: ["userData"] });
+            userRefetch();
         },
         onError: (err) => {
             toast.error(err?.response?.data?.message || "Something went wrong!");
