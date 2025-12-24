@@ -57,7 +57,8 @@ const Header = () => {
                 onConfirm={() => {
                     logout.mutate(undefined, {
                         onSuccess: () => {
-                            setShowLogoutModal(false)
+                            setShowLogoutModal(false);
+                            window.location.reload()
                         }
                     })
                 }}

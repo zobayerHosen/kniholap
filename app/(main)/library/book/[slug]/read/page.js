@@ -8,7 +8,7 @@ import ToggleComplete from "@/components/library/books/ToggleComplete";
 import { axiosPrivateServer } from "@/lib/axios.private.server";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { LuDownload } from "react-icons/lu";
+import PdfDownload from "./components/PdfDownload";
 
 export const metadata = {
   title: "Read Book",
@@ -81,14 +81,7 @@ export default async function BookDetailsPage({ params }) {
 
             {/* Right: Download + Bookmark */}
             <div className="shrink-0 self-end flex gap-6 justify-end items-center">
-              <a
-                href={book.pdf_file || "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="lg:size-12 size-8 shrink-0 bg-primary text-white rounded flex text-lg justify-center items-center p-1 hover:bg-primary/90 transition"
-              >
-                <LuDownload />
-              </a>
+              <PdfDownload book={book} />
               <ToggleBookMark book={book} />
             </div>
           </div>

@@ -187,6 +187,8 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
             <AuthRequiredModal
                 isOpen={showAuthModal}
                 onClose={() => setShowAuthModal(false)}
+                text="You need to sign in first to bookmark this book."
+                buttonText="Go to Sign In"
             />
         </>
     )

@@ -49,9 +49,11 @@ export const useAuth = () => {
     // Get current pathname (works in both App Router & Pages Router)
     // const currentPath = window !== undefined ? window.location.pathname : "";
     // If user is inside /dashboard or any subroute → redirect to /auth
-    {/** if (currentPath.startsWith("/dashboard")) {
+    {
+      /** if (currentPath.startsWith("/dashboard")) {
       router.push("/auth");
-    } */}
+      } */
+    }
     router.push("/auth");
   };
   // ------------------- // Register mutation // -------------------
@@ -160,9 +162,6 @@ export const useAuth = () => {
   });
 
   // -------- Forgot Password Flow -------- //
-
-
-
 
   // ------------------- // Forgot password mutation // -------------------//
   const forgotPassword = useMutation({

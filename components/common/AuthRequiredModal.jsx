@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-const AuthRequiredModal = ({ isOpen, onClose }) => {
+const AuthRequiredModal = ({ isOpen, onClose, text = "", buttonText = "" }) => {
     const router = useRouter();
 
     return (
@@ -10,9 +10,9 @@ const AuthRequiredModal = ({ isOpen, onClose }) => {
             {isOpen && (
                 <motion.div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-                    initial={{opacity: 0}}
-                    animate={{opacity: 1}}
-                    exit={{opacity: 0}}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     onClick={onClose}
                 >
                     <motion.div
@@ -28,7 +28,7 @@ const AuthRequiredModal = ({ isOpen, onClose }) => {
                         </h2>
 
                         <p className="text-gray-600 mt-3">
-                            You need to sign in first to bookmark this book.
+                            {text}
                         </p>
 
                         <div className="flex justify-end gap-3 mt-6">
@@ -43,7 +43,7 @@ const AuthRequiredModal = ({ isOpen, onClose }) => {
                                 onClick={() => router.push("/auth")}
                                 className="cursor-pointer px-4 py-2 rounded-md bg-[#A5340C] text-white hover:bg-[#8f2d0b]"
                             >
-                                Go to Sign In
+                                {buttonText}
                             </button>
                         </div>
                     </motion.div>
