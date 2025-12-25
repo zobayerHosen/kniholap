@@ -1,36 +1,54 @@
 "use client";
 import Image from "next/image";
 
+const statusColors = {
+    pending: "bg-yellow-100 text-yellow-700",
+    shipped: "bg-blue-100 text-blue-700",
+    completed: "bg-green-100 text-green-700",
+};
+
 const RecentOrdersCard = ({ item }) => {
+    const { title, orderId, status, image } = item;
 
-    const { id, title, orderId, status, image } = item;
-
-    // Note: main ui component
+    // Note: min ui card
     return (
-        <div className="w-full flex flex-col gap-6 bg-white p-4 xl:p-6 rounded-3xl">
-            {/* image */}
-            <div className="w-full h-full">
+        <div
+            className="group w-full rounded-2xl p-5 bg-gradient-to-br from-[#FFF7F4] via-white to-[#FDF2EE] border border-[#f0e4df] shadow-sm hover:shadow-xl transition-all duration-300 "
+        >
+            {/* Image */}
+            <div className="relative w-full h-44 bg-white/80 backdrop-blur rounded-xl overflow-hidden flex items-center justify-center">
                 <Image
                     src={image}
                     alt={title}
-                    className="w-full h-full object-contain"
+                    fill
+                    className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
                 />
             </div>
 
-            {/* name and status */}
-            <div className="w-full flex flex-col gap-3">
-                <h3 className="text-xl text-[#0A0910]">{title}</h3>
+            {/* Content */}
+            <div className="mt-4 space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">
+                    {title}
+                </h3>
 
-                {/* status and order id */}
-                <div className="flex items-center justify-between">
-                    <p className="text-base text-[#0A0910]">Status: {status}</p>
-                    <p className="text-base text-[#0A0910]">Order: {orderId}</p>
+                {/* Order info */}
+                <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Order #{orderId}</span>
+
+                    {/* Status badge */}
+                    <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${statusColors[status?.toLowerCase()] ||
+                            "bg-gray-100 text-gray-600"
+                            }`}
+                    >
+                        {status}
+                    </span>
                 </div>
             </div>
 
-            {/* status button */}
+            {/* Action */}
             <button
-                className="cursor-pointer w-full text-[#F5F5F9] text-base md:font-medium bg-[#7C2709] rounded-lg py-1 border border-[#7C2709] hover:bg-transparent hover:text-[#7C2709] hover:shadow-md hover:scale-105 transition-all duration-300 ease-in-out"
+                className="mt-5 w-full py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
             >
                 Ship Now
             </button>

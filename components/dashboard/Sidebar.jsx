@@ -13,6 +13,8 @@ import { TbLogout2 } from "react-icons/tb";
 import { useState } from "react";
 import { useAuth } from "@/hooks/auth.hook";
 import ConfirmLogoutModal from "@/components/common/ConfirmLogoutModal";
+import { FaBookReader } from "react-icons/fa";
+
 
 
 // Note: Dashboard sidebar navlist items
@@ -28,9 +30,14 @@ const navlistItems = [
         icon: <PiBooksLight />
     },
     {
-        label: "Orders",
+        label: "My Purchased Books",
         href: "/dashboard/orders",
         icon: <LuBookText />
+    },
+    {
+        label: "My Sold Books",
+        href: "/dashboard/my-sold-books",
+        icon: <FaBookReader />
     },
     {
         label: "Earnings",

@@ -1,3 +1,4 @@
+"use client"
 import CommonDashboardTitle from '@/components/common/CommonDashboardTitle';
 import recentOrderImage1 from "@/public/recent_orders/orderImage1.png"
 import recentOrderImage2 from "@/public/recent_orders/orderImage2.png"
@@ -33,7 +34,7 @@ const DashboardOrdersList = () => {
     return (
         <div className='w-full'>
             <CommonDashboardTitle
-                text='Recent Orders'
+                text='My Purchesed Books'
             />
 
             {/* recent order cards */}
