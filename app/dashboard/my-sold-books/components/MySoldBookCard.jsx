@@ -72,15 +72,23 @@ const SoldBookCard = ({ book }) => {
                 </div>
             </div>
 
-            {/* Action Button */}
-            <Link
-                href={`/dashboard/my-sold-books/${id}`}
-                className="mt-5 w-full block text-center py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
-            >
-                View Details
-            </Link>
+            {/* Action Buttons view details and chat */}
+            <div className="w-full flex items-center gap-3 mt-5">
+                <Link
+                    href={`/dashboard/my-sold-books/${id}`}
+                    className="w-full block text-center py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
+                >
+                    View Details
+                </Link>
+
+                <Link
+                    href={`/dashboard/chat-book-seller/${id}`}
+                    className="w-full block text-center py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
+                >
+                    Chat
+                </Link>
+            </div>
         </div>
     );
 };
-
 export default SoldBookCard;

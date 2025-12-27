@@ -44,7 +44,7 @@ const DashboardOrdersList = () => {
                         return (
                             <RecentOrdersCard
                                 key={item?.id}
-                                item={item}
+                                item={item} 
                             />
                         )
                     })

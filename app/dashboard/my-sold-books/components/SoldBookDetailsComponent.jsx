@@ -4,9 +4,9 @@ import dummyImage from "@/public/dummyImage.png";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
+import MessageInput from "./MessageInput";
 
 const SoldBookDetailsComponent = ({ params_id }) => {
-    console.log("Params ID ----> ", params_id)
     const axiosInstance = axiosPrivateClient();
 
     // Note: get sold book details
@@ -39,7 +39,7 @@ const SoldBookDetailsComponent = ({ params_id }) => {
         <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             {/* ================= Left Side : Sold Book Details ================= */}
-            <div className="lg:col-span-2 bg-white rounded-2xl p-6  shadow-sm">
+            <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-sm">
 
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
@@ -122,7 +122,7 @@ const SoldBookDetailsComponent = ({ params_id }) => {
             </div>
 
             {/* ================= Right Side : Chat with Buyer ================= */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm flex flex-col">
+            <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm flex flex-col">
 
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
                     Chat with Buyer
@@ -134,16 +134,7 @@ const SoldBookDetailsComponent = ({ params_id }) => {
                 </div>
 
                 {/* Chat Input */}
-                <div className="mt-4 flex gap-2">
-                    <input
-                        type="text"
-                        placeholder="Type your message..."
-                        className="flex-1 rounded-xl border px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                    <button className="px-4 py-2 rounded-xl bg-[#7C2709] text-white text-sm font-medium hover:bg-[#5f1f07] transition">
-                        Send
-                    </button>
-                </div>
+                <MessageInput />
             </div>
         </div>
     );
