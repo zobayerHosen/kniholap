@@ -1,4 +1,4 @@
-import DashboardOrdersList from "@/components/dashboard/orders/DashboardOrdersList";
+import DashboardOrdersList from "@/components/dashboard/my-purchased-book/DashboardOrdersList";
 import React from "react";
 
 const OrdersPage = () => {

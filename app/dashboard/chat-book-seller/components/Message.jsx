@@ -1,9 +1,15 @@
+"use client"
 /* eslint-disable no-unused-vars */
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@/hooks/get-user.hook";
 import { motion } from "framer-motion";
+import dummyImage from "@/public/dummyImage.png";
+import { useState } from "react";
+import Image from "next/image";
 
 const Message = ({ message, otherUser = {} }) => {
-    const { userData, userRole } = useAuth()
+    const { userData, userRole } = useUser();
+
+
     const {
         id,
         message: text = "N/A",
@@ -11,16 +17,22 @@ const Message = ({ message, otherUser = {} }) => {
         sender_id,
         sender_name,
     } = message;
-    // Destructure user data with fallbacks
+
+
+    // Note: Destructure user data with fallbacks
     const {
-        image_url: other_img,
         id: other_id,
         name = "Unknown User",
         role = "N/A role"
     } = otherUser
-    // is message sent by me
+
+
+    // Note: is message sent by me
     const is_me = userData?.id === sender_id;
-    // main component
+
+    const [imgURL, setImgURL] = useState(otherUser?.image_url || dummyImage)
+
+    // Note: main component
     return (
         <motion.div
             variants={{
@@ -57,10 +69,12 @@ const Message = ({ message, otherUser = {} }) => {
         >
             <div className="relative max-w-lg flex items-end gap-2">
                 {!is_me && (
-                    <img
-                        src={other_img}
+                    <Image
+                        src={imgURL}
                         alt={sender_name}
+
                         className="w-8 h-8 border border-indigo-300 rounded-full"
+                        onError={() => setImgURL(dummyImage)}
                     />
                 )}
 
@@ -69,7 +83,7 @@ const Message = ({ message, otherUser = {} }) => {
                         is_me ? <p className="text-sm font-semibold text-teal-500">You</p> : <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">{sender_name}</p>
                     }
                     <div
-                        className={`p-3 rounded text-white text-sm ${is_me
+                        className={`p-3 rounded text-black bg-amber-300 text-sm ${is_me
                             ? "bg-primary rounded-br-none"
                             : "bg-primary-dark rounded-bl-none"
                             }`}

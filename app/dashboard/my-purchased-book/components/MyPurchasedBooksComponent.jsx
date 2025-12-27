@@ -10,7 +10,7 @@ import { AnimatePresence } from "framer-motion";
 import EmptyScreen from "../../chat-book-seller/components/EmptyScreen";
 import { useUser } from "@/hooks/get-user.hook";
 
-// Note: dummy user and message
+// Note: dummy user message
 const messages = [
     {
         id: 1,
@@ -42,15 +42,15 @@ const messages = [
     },
 ];
 
-const SoldBookDetailsComponent = ({ params_id }) => {
-    const { messagesEndRef , roomData, userData } = useUser()
+const MyPurchasedBooksComponent = ({ params_id }) => {
+    const { messagesEndRef, roomData, userData } = useUser()
     const axiosInstance = axiosPrivateClient();
 
     // Note: get sold book details
     const { data: getSoldBookDetails, isloading } = useQuery({
         queryKey: ['sold-book-details', params_id],
         queryFn: async () => {
-            const response = await axiosInstance.get(`/auth/seller/order/details/${params_id}`);
+            const response = await axiosInstance.get(`/auth/buyer/order/details/${params_id}`);
             return response?.data?.data || {};
         },
         enabled: !!params_id
@@ -193,4 +193,4 @@ const SoldBookDetailsComponent = ({ params_id }) => {
         </div>
     );
 };
-export default SoldBookDetailsComponent;
+export default MyPurchasedBooksComponent;

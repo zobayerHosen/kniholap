@@ -15,45 +15,50 @@ import { useAuth } from "@/hooks/auth.hook";
 import ConfirmLogoutModal from "@/components/common/ConfirmLogoutModal";
 import { FaBookReader } from "react-icons/fa";
 
-
-
 // Note: Dashboard sidebar navlist items
-const navlistItems = [
+const navLinks = [
     {
         label: "Dashboard",
         href: "/dashboard",
-        icon: <MdOutlineDashboard />
+        icon: <MdOutlineDashboard />,
+        end: true,
     },
     {
         label: "Books",
         href: "/dashboard/books",
-        icon: <PiBooksLight />
+        icon: <PiBooksLight />,
+        end: false,
     },
     {
         label: "My Purchased Books",
-        href: "/dashboard/orders",
-        icon: <LuBookText />
+        href: "/dashboard/my-purchased-book",
+        icon: <LuBookText />,
+        end: false,
     },
     {
         label: "My Sold Books",
         href: "/dashboard/my-sold-books",
-        icon: <FaBookReader />
+        icon: <FaBookReader />,
+        end: false,
     },
     {
         label: "Earnings",
         href: "/dashboard/earnings",
-        icon: <FaCoins />
+        icon: <FaCoins />,
+        end: true,
     },
     {
         label: "Settings",
         href: "/dashboard/settings",
-        icon: <IoSettingsOutline />
+        icon: <IoSettingsOutline />,
+        end: true,
     },
     {
         label: "Logout",
+        href: "",
         icon: <TbLogout2 />,
         isButton: true
-    }
+    },
 ];
 
 const Sidebar = () => {
@@ -119,8 +124,7 @@ const Sidebar = () => {
 
                 {/* navlist */}
                 <nav className="flex flex-col gap-3 items-start mt-9">
-                    {navlistItems?.map((item, idx) => {
-                        const isActive = pathName === item?.href;
+                    {navLinks?.map((item, idx) => {
 
                         // Note: logout button
                         if (item?.isButton) {
@@ -134,14 +138,18 @@ const Sidebar = () => {
                                     <span className="text-lg">{item.icon}</span>
                                     {item.label}
                                 </button>
-                            )
+                            );
                         }
 
-                        // Note: other nav list
+
+                        const isActive = item.end
+                            ? pathName === item.href
+                            : pathName.startsWith(item.href);
+
                         return (
                             <Link
                                 key={idx}
-                                href={item?.href}
+                                href={item.href}
                                 onClick={closeSidebar}
                                 className={`w-full flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-xl ${isActive
                                     ? "bg-white text-[#A5340C]"
@@ -154,6 +162,7 @@ const Sidebar = () => {
                         );
                     })}
                 </nav>
+
             </aside>
 
             <ConfirmLogoutModal

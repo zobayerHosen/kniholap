@@ -1,3 +1,4 @@
+"use client"
 import { FiMessageSquare } from "react-icons/fi"
 
 const EmptyScreen = () => {
