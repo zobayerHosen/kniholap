@@ -2,7 +2,8 @@
 import dashboardLogo from "@/public/dashboardLogo.png"
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+
 import { FiSidebar } from "react-icons/fi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { PiBooksLight } from "react-icons/pi";
@@ -63,9 +64,12 @@ const navLinks = [
 
 const Sidebar = () => {
     const pathName = usePathname();
+    const searchParams = useSearchParams();
+    const bookType = searchParams.get("type"); // sold | purchased
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const { logout } = useAuth()
+
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -125,7 +129,32 @@ const Sidebar = () => {
                 {/* navlist */}
                 <nav className="flex flex-col gap-3 items-start mt-9">
                     {navLinks?.map((item, idx) => {
+                        const isBookDetailsPage = pathName.startsWith("/dashboard/book-details");
+                        let isActive = false;
 
+                        // Note: Normal pages
+                        if (!isBookDetailsPage) {
+                            isActive = item.end
+                                ? pathName === item.href
+                                : pathName.startsWith(item.href);
+                        }
+
+                        // Note: Book details + chat pages
+                        if (isBookDetailsPage) {
+                            if (
+                                item.href === "/dashboard/my-sold-books" &&
+                                bookType === "sold"
+                            ) {
+                                isActive = true;
+                            }
+
+                            if (
+                                item.href === "/dashboard/my-purchased-book" &&
+                                bookType === "purchased"
+                            ) {
+                                isActive = true;
+                            }
+                        }
                         // Note: logout button
                         if (item?.isButton) {
                             return (
@@ -140,12 +169,7 @@ const Sidebar = () => {
                                 </button>
                             );
                         }
-
-
-                        const isActive = item.end
-                            ? pathName === item.href
-                            : pathName.startsWith(item.href);
-
+                        // Note: others button
                         return (
                             <Link
                                 key={idx}

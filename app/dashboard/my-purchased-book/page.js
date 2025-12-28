@@ -1,12 +1,13 @@
-import DashboardOrdersList from "@/components/dashboard/my-purchased-book/DashboardOrdersList";
-import React from "react";
+import OrdersList from "@/components/dashboard/OrderList";
 
-const OrdersPage = () => {
+const PurchasedBookPage = () => {
   return (
-    <div className="w-full">
-      <DashboardOrdersList />
-      {/* <OldOrderList /> */}
-    </div>
+    <OrdersList   
+      title="My Purchased Books"
+      queryKey={["my-purchased-books"]}
+      endpoint="/auth/buyer/order/list"
+      type="purchased"
+    />
   );
 };
-export default OrdersPage;
+export default PurchasedBookPage;

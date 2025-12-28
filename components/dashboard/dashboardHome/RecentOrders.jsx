@@ -1,8 +1,10 @@
+"use client"
 import CommonDashboardTitle from '@/components/common/CommonDashboardTitle';
 import recentOrderImage1 from "@/public/recent_orders/orderImage1.png"
 import recentOrderImage2 from "@/public/recent_orders/orderImage2.png"
 import recentOrderImage3 from "@/public/recent_orders/orderImage3.png"
 import RecentOrdersCard from './RecentOrdersCard';
+import { useQuery } from '@tanstack/react-query';
 
 // Note: recent orderd dummy data
 const recentOrdersData = [
@@ -30,6 +32,17 @@ const recentOrdersData = [
 ];
 
 const RecentOrders = () => {
+    // Note: recent orders
+    const { data: recentOrders } = useQuery({
+        queryKey: ["recent-orders"],
+        queryFn: async () => {
+            const response = await axiosInstance.get(``);
+            return response?.data || [];
+        }
+    });
+    console.log("Recent orders : -----> ", recentOrders);
+
+    // Note: main ui component
     return (
         <div className='w-full mt-10 lg:mt-[60px]'>
             <CommonDashboardTitle

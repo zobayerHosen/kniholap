@@ -9,6 +9,7 @@ import Message from "../../chat-book-seller/components/Message";
 import { AnimatePresence } from "framer-motion";
 import EmptyScreen from "../../chat-book-seller/components/EmptyScreen";
 import { useUser } from "@/hooks/get-user.hook";
+import { useSearchParams } from "next/navigation";
 
 // Note: dummy user and message
 const messages = [
@@ -42,8 +43,10 @@ const messages = [
     },
 ];
 
-const SoldBookDetailsComponent = ({ params_id }) => {
-    const { messagesEndRef , roomData, userData } = useUser()
+const SoldBookDetailsComponent = ({ params_id, showChat }) => {
+    const searchParams = useSearchParams();
+    const role = searchParams.get("role");
+    const { messagesEndRef, roomData, userData } = useUser()
     const axiosInstance = axiosPrivateClient();
 
     // Note: get sold book details
@@ -57,6 +60,7 @@ const SoldBookDetailsComponent = ({ params_id }) => {
     });
     console.log("Sold book details data: --->", getSoldBookDetails);
 
+    // Note: destructure all properties
     const {
         order_number,
         total_amount,
@@ -73,7 +77,7 @@ const SoldBookDetailsComponent = ({ params_id }) => {
     const [imageSrc, setImageSrc] = useState(cover_image || dummyImage);
 
     return (
-        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className={`w-full grid gap-6 ${showChat ? "lg:grid-cols-3" : "lg:grid-cols-1"}`}>
 
             {/* ================= Left Side : Sold Book Details ================= */}
             <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-sm">
@@ -159,37 +163,41 @@ const SoldBookDetailsComponent = ({ params_id }) => {
             </div>
 
             {/* ================= Right Side : Chat with Buyer ================= */}
-            <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm flex flex-col">
+            {
+                showChat && (
+                    <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm flex flex-col">
 
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                    Chat with Buyer
-                </h2>
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                            {role === "seller" ? "Chat with Buyer" : "Chat with Seller"}
+                        </h2>
 
-                {/* Chat Messages Area */}
-                {messages?.length === 0 ? (
-                    <EmptyScreen />
-                ) : (
-                    <div className="w-full border border-t-0 border-slate-300 mb-2 h-full p-2 md:p-4 overflow-y-auto">
-                        {/* Animate message appearance/disappearance */}
-                        <AnimatePresence>
-                            {messages?.map((message) => (
-                                <Message
-                                    key={message.id}
-                                    message={message}
-                                    isCurrentUser={message.sender_id === userData?.id}
-                                    isTemp={message.isTemp}
-                                    otherUser={roomData?.receiver}
-                                />
-                            ))}
-                        </AnimatePresence>
-                        {/* Invisible element for scrolling to bottom */}
-                        <div ref={messagesEndRef} />
+                        {/* Chat Messages Area */}
+                        {messages?.length === 0 ? (
+                            <EmptyScreen />
+                        ) : (
+                            <div className="w-full border border-t-0 border-slate-300 mb-2 h-full p-2 md:p-4 overflow-y-auto">
+                                {/* Animate message appearance/disappearance */}
+                                <AnimatePresence>
+                                    {messages?.map((message) => (
+                                        <Message
+                                            key={message.id}
+                                            message={message}
+                                            isCurrentUser={message.sender_id === userData?.id}
+                                            isTemp={message.isTemp}
+                                            otherUser={roomData?.receiver}
+                                        />
+                                    ))}
+                                </AnimatePresence>
+                                {/* Invisible element for scrolling to bottom */}
+                                <div ref={messagesEndRef} />
+                            </div>
+                        )}
+                        {/* Chat Input */}
+                        <MessageInput />
                     </div>
-                )}
+                )
+            }
 
-                {/* Chat Input */}
-                <MessageInput />
-            </div>
         </div>
     );
 };

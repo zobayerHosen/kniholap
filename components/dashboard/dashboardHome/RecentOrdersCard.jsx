@@ -14,8 +14,8 @@ const statusColors = {
 };
 
 // Note: Book card component matching the RecentOrdersCard design
-const RecentOrdersCard = ({ book }) => {
-    const { id, status, soldDate, buyer, book: bookInfo = {} } = book || {};
+const RecentOrdersCard = ({ item }) => {
+    const { id, status, soldDate, buyer, book: bookInfo = {} } = item || {};
     const { title, cover_image, author: bookAuthor, price, } = bookInfo;
     const [imageSrc, setImageSrc] = useState(cover_image || dummyImage);
 
@@ -73,22 +73,12 @@ const RecentOrdersCard = ({ book }) => {
             </div>
 
             {/* Action Buttons view details and chat */}
-            <div className="w-full flex items-center gap-3 mt-5">
-                <Link
-                    href={`/dashboard/my-purchased-book/${id}`}
-                    className="w-full block text-center py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
-                >
-                    View Details
-                </Link>
-
-                <Link
-                    href={`/dashboard/chat-book-seller/${id}`}
-                    
-                    className="w-full block text-center py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
-                >
-                    Chat
-                </Link>
-            </div>
+            <Link
+                href={`/dashboard/my-purchased-book/${id}`}
+                className="mt-5 w-full block text-center py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
+            >
+                View Details
+            </Link>
         </div>
     );
 };

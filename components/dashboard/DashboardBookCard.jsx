@@ -14,10 +14,11 @@ const statusColors = {
 };
 
 // Note: Book card component matching the RecentOrdersCard design
-const SoldBookCard = ({ book }) => {
+const DashboardBookCard = ({ book, type = null }) => {
     const { id, status, soldDate, buyer, book: bookInfo = {} } = book || {};
     const { title, cover_image, author: bookAuthor, price, } = bookInfo;
     const [imageSrc, setImageSrc] = useState(cover_image || dummyImage);
+    const detailsPath = `/dashboard/book-details/${id}`;
 
     // Note: main ui component
     return (
@@ -74,15 +75,27 @@ const SoldBookCard = ({ book }) => {
 
             {/* Action Buttons view details and chat */}
             <div className="w-full flex items-center gap-3 mt-5">
+                {/* View details (NO chat)  this path looks like ===> /dashboard/book-details/${id}?type=sold/purchased*/}
                 <Link
-                    href={`/dashboard/my-sold-books/${id}`}
+                    href={{
+                        pathname: detailsPath,
+                        query: { type },
+                    }}
                     className="w-full block text-center py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
                 >
                     View Details
                 </Link>
 
+                {/* Chat (details + chat)  this path looks like ===> /dashboard/book-details/${id}?type=sold/purchased&chat=true&role=buyer */}
                 <Link
-                    href={`/dashboard/chat-book-seller/${id}`}
+                    href={{
+                        pathname: detailsPath,
+                        query: {
+                            type,
+                            chat: "true",
+                            role: type === "sold" ? "seller" : "buyer",
+                        },
+                    }}
                     className="w-full block text-center py-2 rounded-xl text-sm font-semibold bg-[#7C2709] text-white hover:bg-[#5f1f07] hover:shadow-md active:scale-95 transition-all duration-300"
                 >
                     Chat
@@ -91,4 +104,4 @@ const SoldBookCard = ({ book }) => {
         </div>
     );
 };
-export default SoldBookCard;
+export default DashboardBookCard;
