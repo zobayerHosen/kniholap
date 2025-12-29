@@ -7,30 +7,22 @@ import { useState } from "react";
 import Image from "next/image";
 
 const Message = ({ message, otherUser = {} }) => {
-    const { userData, userRole } = useUser();
-
-
+    const { userData } = useUser();
     const {
         id,
-        message: text = "N/A",
+        text,
         sent_at = "N/A",
         sender_id,
-        sender_name,
+        sender = {},
+        receiver = {}
     } = message;
-
-
-    // Note: Destructure user data with fallbacks
-    const {
-        id: other_id,
-        name = "Unknown User",
-        role = "N/A role"
-    } = otherUser
-
+    console.log("Single message: ----> ", message);
 
     // Note: is message sent by me
     const is_me = userData?.id === sender_id;
-
-    const [imgURL, setImgURL] = useState(otherUser?.image_url || dummyImage)
+    const [imgURL, setImgURL] = useState(receiver?.avatar || dummyImage)
+    const [mineImgURL, setMineImgURL] = useState(sender?.avatar || dummyImage)
+    console.log("receiver ", receiver)
 
     // Note: main component
     return (
@@ -71,8 +63,9 @@ const Message = ({ message, otherUser = {} }) => {
                 {!is_me && (
                     <Image
                         src={imgURL}
-                        alt={sender_name}
-
+                        alt={receiver?.first_name}
+                        width={320}
+                        height={150}
                         className="w-8 h-8 border border-indigo-300 rounded-full"
                         onError={() => setImgURL(dummyImage)}
                     />
@@ -80,7 +73,7 @@ const Message = ({ message, otherUser = {} }) => {
 
                 <div className="flex flex-col gap-1">
                     {
-                        is_me ? <p className="text-sm font-semibold text-teal-500">You</p> : <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">{sender_name}</p>
+                        is_me ? <p className="text-sm font-semibold text-teal-500">You</p> : <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">{sender?.first_name} {sender?.last_name}</p>
                     }
                     <div
                         className={`p-3 rounded text-black bg-amber-300 text-sm ${is_me
@@ -95,10 +88,13 @@ const Message = ({ message, otherUser = {} }) => {
                     </div>
                 </div>
                 {is_me && (
-                    <img
-                        src={userRole === "company" ? userData?.company?.image_url : userData?.employee?.image_url}
-                        alt={userData?.name}
+                    <Image
+                        src={mineImgURL}
+                        alt={sender?.first_name}
+                        width={320}
+                        height={150}
                         className="w-8 h-8 rounded-full border border-teal-300"
+                        onError={() => setMineImgURL(dummyImage)}
                     />
                 )}
             </div>

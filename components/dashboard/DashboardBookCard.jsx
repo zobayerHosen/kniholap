@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import dummyImage from "@/public/dummyImage.png"
+import dummyImage from "@/public/dummyImage.png";
 import { useState } from "react";
 import Link from "next/link";
 

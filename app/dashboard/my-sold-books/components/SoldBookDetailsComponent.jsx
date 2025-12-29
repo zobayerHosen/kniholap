@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import dummyImage from "@/public/dummyImage.png";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import MessageInput from "../../chat-book-seller/components/MessageInput";
 import Message from "../../chat-book-seller/components/Message";
@@ -10,43 +10,46 @@ import { AnimatePresence } from "framer-motion";
 import EmptyScreen from "../../chat-book-seller/components/EmptyScreen";
 import { useUser } from "@/hooks/get-user.hook";
 import { useSearchParams } from "next/navigation";
+import ErrorScreen from "@/components/common/ErrorScreen";
+import echo from "@/lib/echo";
+import SoldBookDetailsSkeleton from "@/components/dashboard/SoldBookDetailsSkeleton";
 
 // Note: dummy user and message
-const messages = [
-    {
-        id: 1,
-        message: "Hi, I’ve just placed the order. When will it be shipped?",
-        sent_at: "10:15 AM",
-        sender_id: 2,
-        sender_name: "Buyer John",
-    },
-    {
-        id: 2,
-        message: "Hello! Thanks for your order. I will ship it within 24 hours.",
-        sent_at: "10:17 AM",
-        sender_id: 1, // current user (seller)
-        sender_name: "You",
-    },
-    {
-        id: 3,
-        message: "Great! Please let me know once it’s shipped 😊",
-        sent_at: "10:18 AM",
-        sender_id: 2,
-        sender_name: "Buyer John",
-    },
-    {
-        id: 4,
-        message: "Sure! I’ll also share the tracking number.",
-        sent_at: "10:20 AM",
-        sender_id: 1,
-        sender_name: "You",
-    },
-];
+// const messages = [
+//     {
+//         id: 1,
+//         message: "Hi, I’ve just placed the order. When will it be shipped?",
+//         sent_at: "10:15 AM",
+//         sender_id: 2,
+//         sender_name: "Buyer John",
+//     },
+//     {
+//         id: 2,
+//         message: "Hello! Thanks for your order. I will ship it within 24 hours.",
+//         sent_at: "10:17 AM",
+//         sender_id: 1, // current user (seller)
+//         sender_name: "You",
+//     },
+//     {
+//         id: 3,
+//         message: "Great! Please let me know once it’s shipped 😊",
+//         sent_at: "10:18 AM",
+//         sender_id: 2,
+//         sender_name: "Buyer John",
+//     },
+//     {
+//         id: 4,
+//         message: "Sure! I’ll also share the tracking number.",
+//         sent_at: "10:20 AM",
+//         sender_id: 1,
+//         sender_name: "You",
+//     },
+// ];
 
 const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     const searchParams = useSearchParams();
     const role = searchParams.get("role");
-    const { messagesEndRef, roomData, userData } = useUser()
+    const { userRole, userData } = useUser()
     const axiosInstance = axiosPrivateClient();
 
     // Note: get sold book details
@@ -63,6 +66,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     // Note: destructure all properties
     const {
         order_number,
+        room_id,
         total_amount,
         book_price,
         shipping_cost,
@@ -76,6 +80,156 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     const { title, author, cover_image, type, price } = book;
     const [imageSrc, setImageSrc] = useState(cover_image || dummyImage);
 
+    // Note: chating
+    // State for new message input
+    const [newMessage, setNewMessage] = useState("");
+    // Refs for DOM elements
+    const messagesEndRef = useRef(null);
+    const inputRef = useRef(null);
+    // Note: State for storing messages
+    const [messages, setMessages] = useState([]);
+    // Track processed message IDs to avoid duplicates
+    const processedMessageIds = useRef(new Set());
+
+    // Note: Fetch chat room data and messages
+    const {
+        data: roomData,
+        isError: roomDataError,
+        isLoading: roomDataLoading,
+        isFetching,
+        refetch
+    } = useQuery({
+        queryKey: ["chat_room_messages", room_id],
+        queryFn: async () => {
+            const response = await axiosInstance.get(`/auth/chat/room/${room_id}`);
+            return response?.data?.data || {};
+        },
+        enabled: !!room_id,
+    });
+    console.log("Room data : ---->", roomData)
+
+    // Note: Function to scroll to the bottom of the messages
+    const scrollToBottom = useCallback(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, []);
+
+    // Update messages when roomData changes
+    useEffect(() => {
+        if (roomData?.messages) {
+            setMessages(roomData?.messages);
+            // Update processed message IDs
+            processedMessageIds.current = new Set(roomData?.messages.map(m => m.id));
+        }
+    }, [roomData]);
+
+    // Note: Format message object consistently
+    const formatMessage = useCallback((message) => ({
+        id: message?.id || uuidv4(), // Use existing ID or generate new one
+        sender_name: message?.sender?.name || (message.sender_id === userData?.id
+            ? (userRole === "company" ? userData?.company?.name : userData?.name)
+            : roomData?.receiver?.name),
+        sender_image: message?.sender?.avatar || (message.sender_id === userData?.id
+            ? (userRole === "company" ? userData?.company?.image_url : userData?.employee?.image_url)
+            : roomData?.receiver?.image_url),
+        sender_id: message?.sender?.id || message.sender_id,
+        message: message?.text || message?.message,
+        sent_at: message?.humanize_date || message?.sent_at || new Date().toLocaleTimeString(),
+        receiver: message?.receiver || roomData?.receiver || {},
+        isTemp: !!message?.isTemp // Flag for temporary messages
+    }), [userData, userRole, roomData]);
+
+    // Note: Mutation for sending messages
+    const { mutate: sendMessage } = useMutation({
+        mutationFn: async (tempId) => {
+            const response = await axiosInstance.post(`/auth/chat/send`, {
+                room_id: room_id,
+                receiver_id: params_id?.receiver?.id,
+                message: newMessage,
+                temp_id: tempId
+            });
+            return response?.data;
+        },
+        onSuccess: () => {
+            // Clear input on success
+            setNewMessage("");
+        },
+        onError: (error, tempId) => {
+            // Remove temporary message if error occurs
+            setMessages(prev => prev.filter(m => m.id !== tempId));
+            processedMessageIds.current.delete(tempId);
+        }
+    });
+
+    // Note: Handler for new incoming messages
+    const handleNewMessage = useCallback((message) => {
+        // Skip if messages has no ID or already processed
+        if (!message?.id || processedMessageIds.current.has(message.id)) {
+            return;
+        }
+        setMessages(prev => {
+            // Skip if messages already exists
+            if (prev.some(m => m.id === message.id)) return prev;
+            return [...prev, formatMessage(message)];
+        });
+        // Mark message as processed
+        processedMessageIds.current.add(message.id);
+    }, [formatMessage]);
+
+    // Note: Setup Echo channels for real-time updates
+    useEffect(() => {
+        if (!room_id || !userData) return;
+
+        // Join private channels for real-time messaging
+        const roomChannel = echo.private(`chat-room.${room_id}`);
+        const receiverChannel = echo.private(`chat-receiver.${userData.id}`);
+        const senderChannel = echo.private(`chat-sender.${userData.id}`);
+
+        // Listen for message events
+        roomChannel.listen('MessageSendEvent', (data) => handleNewMessage(data?.data));
+        receiverChannel.listen('MessageSendEvent', (data) => handleNewMessage(data?.data));
+        senderChannel.listen('MessageSendEvent', (data) => handleNewMessage(data?.data));
+
+        // Cleanup: leave channels when component unmounts
+        return () => {
+            echo.leave(`chat-room.${room_id}`);
+            echo.leave(`chat-receiver.${userData.id}`);
+            echo.leave(`chat-sender.${userData.id}`);
+        };
+    }, [room_id, userData, handleNewMessage]);
+
+    // Note: Scroll to bottom when messages change
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, scrollToBottom]);
+
+    // Note: Send message handler
+    const handleSendMessage = () => {
+        if (!newMessage.trim()) return; // Don't send empty messages
+        const tempId = uuidv4(); // Generate temp ID for optimistic update
+        processedMessageIds.current.add(tempId);
+        sendMessage(tempId); // Trigger send mutation
+        inputRef.current?.focus(); // Keep focus on input
+    };
+
+    // Note: Handle Enter key press for sending messages
+    const handleKeyPress = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    };
+
+    // Note: Loading state
+    if (roomDataLoading || isFetching || roomDataLoading) {
+        return <SoldBookDetailsSkeleton showChat={showChat} />;
+    }
+
+    // Note: Error state
+    if (roomDataError) {
+        return <ErrorScreen refetch={refetch} />;
+    }
+
+    // Note: Main ui component
     return (
         <div className={`w-full grid gap-6 ${showChat ? "lg:grid-cols-3" : "lg:grid-cols-1"}`}>
 
@@ -184,7 +338,6 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
                                             message={message}
                                             isCurrentUser={message.sender_id === userData?.id}
                                             isTemp={message.isTemp}
-                                            otherUser={roomData?.receiver}
                                         />
                                     ))}
                                 </AnimatePresence>
@@ -193,7 +346,13 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
                             </div>
                         )}
                         {/* Chat Input */}
-                        <MessageInput />
+                        <MessageInput
+                            inputRef={inputRef}
+                            newMessage={newMessage}
+                            setNewMessage={setNewMessage}
+                            handleSendMessage={handleSendMessage}
+                            handleKeyPress={handleKeyPress}
+                        />
                     </div>
                 )
             }

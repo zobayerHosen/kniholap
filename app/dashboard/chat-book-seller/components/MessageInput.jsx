@@ -9,7 +9,6 @@ const MessageInput = ({
     handleSendMessage,
     handleKeyPress,
 }) => {
-
     // main component
     return (
         <div className="bg-[#A5340C] dark:border-slate-700 py-1 px-4 rounded-lg mt-2">
