@@ -14,12 +14,20 @@ import ErrorScreen from "@/components/common/ErrorScreen";
 import echo from "@/lib/echo";
 import SoldBookDetailsSkeleton from "@/components/dashboard/SoldBookDetailsSkeleton";
 import { v4 as uuidv4 } from "uuid";
+import useUpdateShippingOrder from "@/hooks/update-shipping.hook";
+import toast from "react-hot-toast";
 
 const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     const searchParams = useSearchParams();
     const role = searchParams.get("role");
-    const { userRole, userData } = useUser()
+    const { userData } = useUser();
     const axiosInstance = axiosPrivateClient();
+
+    // Note: Update shipping address
+    const updateShipping = useUpdateShippingOrder();
+    const [trackingNumber, setTrackingNumber] = useState("");
+    const [courierName, setCourierName] = useState("");
+
 
     // Note: get sold book details
     const { data: getSoldBookDetails, isloading } = useQuery({
@@ -33,6 +41,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
 
     // Note: destructure all properties
     const {
+        id,
         order_number,
         room_id,
         total_amount,
@@ -42,6 +51,8 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
         shipping_address,
         status,
         paid_at,
+        tracking_number,
+        courier_name,
         book = {},
     } = getSoldBookDetails || {};
 
@@ -224,7 +235,6 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
         sendMessage(tempId);
     };
 
-
     // Note: Handle Enter key press for sending messages
     const handleKeyPress = (e) => {
         if (e.key === "Enter" && !e.shiftKey) {
@@ -241,7 +251,21 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     // Note: Error state
     if (roomDataError) {
         return <ErrorScreen refetch={refetch} />;
-    }
+    };
+
+    // Note: shipping onSubmit handler
+    const handleUpdateShipping = () => {
+        if (!trackingNumber || !courierName) {
+            toast.error("Please fill all shipping fields");
+            return;
+        }
+
+        updateShipping.mutate({
+            order_id: id,
+            tracking_number: trackingNumber,
+            courier_name: courierName,
+        });
+    };
 
     // Note: Main ui component
     return (
@@ -328,12 +352,50 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
                         {shipping_address}
                     </p>
                 </div>
+
+                {/* traciking and courier number input */}
+                <div className="w-full mt-8 space-y-4">
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            📍 Tracking Number
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="e.g., TRK123456789"
+                            value={trackingNumber}
+                            onChange={(e) => setTrackingNumber(e.target.value)}
+                            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#A5340C] focus:border-transparent transition-all disabled:bg-gray-100"
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            🚚 Courier Service
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="e.g., Pathao, Sundarban, Steadfast"
+                            value={courierName}
+                            onChange={(e) => setCourierName(e.target.value)}
+                            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#A5340C] focus:border-transparent transition-all disabled:bg-gray-100"
+                        />
+                    </div>
+
+                    <button
+                        disabled={updateShipping.isLoading}
+                        onClick={handleUpdateShipping}
+                        className="w-full border border-[#A5340C] font-bold py-3 px-6 rounded-xl bg-[#A5340C] text-white hover:bg-transparent hover:text-[#A5340C]"
+                    >
+                        {updateShipping.isLoading ? "Updating..." : "Update Shipping Info"}
+                    </button>
+
+                </div>
             </div>
 
             {/* ================= Right Side : Chat with Buyer ================= */}
             {
                 showChat && (
-                    <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm flex flex-col h-[620px] overflow-y-auto">
+                    <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm flex flex-col h-[800px] overflow-y-auto">
 
                         <h2 className="text-lg font-semibold text-gray-900 mb-4">
                             {role === "seller" ? "Chat with Buyer" : "Chat with Seller"}
