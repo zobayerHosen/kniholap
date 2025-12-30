@@ -13,38 +13,7 @@ import { useSearchParams } from "next/navigation";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import echo from "@/lib/echo";
 import SoldBookDetailsSkeleton from "@/components/dashboard/SoldBookDetailsSkeleton";
-
-// Note: dummy user and message
-// const messages = [
-//     {
-//         id: 1,
-//         message: "Hi, I’ve just placed the order. When will it be shipped?",
-//         sent_at: "10:15 AM",
-//         sender_id: 2,
-//         sender_name: "Buyer John",
-//     },
-//     {
-//         id: 2,
-//         message: "Hello! Thanks for your order. I will ship it within 24 hours.",
-//         sent_at: "10:17 AM",
-//         sender_id: 1, // current user (seller)
-//         sender_name: "You",
-//     },
-//     {
-//         id: 3,
-//         message: "Great! Please let me know once it’s shipped 😊",
-//         sent_at: "10:18 AM",
-//         sender_id: 2,
-//         sender_name: "Buyer John",
-//     },
-//     {
-//         id: 4,
-//         message: "Sure! I’ll also share the tracking number.",
-//         sent_at: "10:20 AM",
-//         sender_id: 1,
-//         sender_name: "You",
-//     },
-// ];
+import { v4 as uuidv4 } from "uuid";
 
 const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     const searchParams = useSearchParams();
@@ -61,7 +30,6 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
         },
         enabled: !!params_id
     });
-    console.log("Sold book details data: --->", getSoldBookDetails);
 
     // Note: destructure all properties
     const {
@@ -106,14 +74,14 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
         },
         enabled: !!room_id,
     });
-    console.log("Room data : ---->", roomData)
+    console.log("Room Data : ----->", roomData);
 
     // Note: Function to scroll to the bottom of the messages
     const scrollToBottom = useCallback(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, []);
 
-    // Update messages when roomData changes
+    // Note: Update messages when roomData changes
     useEffect(() => {
         if (roomData?.messages) {
             setMessages(roomData?.messages);
@@ -123,41 +91,73 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     }, [roomData]);
 
     // Note: Format message object consistently
-    const formatMessage = useCallback((message) => ({
-        id: message?.id || uuidv4(), // Use existing ID or generate new one
-        sender_name: message?.sender?.name || (message.sender_id === userData?.id
-            ? (userRole === "company" ? userData?.company?.name : userData?.name)
-            : roomData?.receiver?.name),
-        sender_image: message?.sender?.avatar || (message.sender_id === userData?.id
-            ? (userRole === "company" ? userData?.company?.image_url : userData?.employee?.image_url)
-            : roomData?.receiver?.image_url),
-        sender_id: message?.sender?.id || message.sender_id,
-        message: message?.text || message?.message,
-        sent_at: message?.humanize_date || message?.sent_at || new Date().toLocaleTimeString(),
-        receiver: message?.receiver || roomData?.receiver || {},
-        isTemp: !!message?.isTemp // Flag for temporary messages
-    }), [userData, userRole, roomData]);
+    const formatMessage = useCallback(
+        (message) => {
+            const sender = message?.sender || {};
+            const receiver = message?.receiver || roomData?.receiver || {};
+
+            return {
+                id: message?.id || uuidv4(),
+
+                // sender info (normalized)
+                sender_id: sender?.id || message?.sender_id,
+                sender: sender,
+                receiver: receiver,
+
+                // UI-friendly fields
+                sender_name:
+                    sender?.first_name
+                        ? `${sender.first_name} ${sender.last_name || ""}`
+                        : sender?.id === userData?.id
+                            ? "You"
+                            : `${receiver?.first_name || ""} ${receiver?.last_name || ""}`,
+
+                sender_image: sender?.avatar || null,
+
+                // message body
+                text: message?.text || message?.message || "",
+
+                // time
+                sent_at:
+                    message?.humanize_date ||
+                    message?.sent_at ||
+                    new Date().toLocaleTimeString(),
+
+                // temp flag
+                isTemp: Boolean(message?.isTemp),
+            };
+        },
+        [userData?.id, roomData]
+    );
 
     // Note: Mutation for sending messages
     const { mutate: sendMessage } = useMutation({
         mutationFn: async (tempId) => {
-            const response = await axiosInstance.post(`/auth/chat/send`, {
-                room_id: room_id,
-                receiver_id: params_id?.receiver?.id,
-                message: newMessage,
-                temp_id: tempId
-            });
-            return response?.data;
+            const response = await axiosInstance.post(
+                `/auth/chat/send/${roomData?.receiver?.id}`,
+                {
+                    text: newMessage,
+                }
+            );
+            return response?.data?.data?.chat;
         },
-        onSuccess: () => {
-            // Clear input on success
+
+        onSuccess: (chat) => {
+            if (!chat) return;
+            // Note: replace temp message with real one
+            setMessages((prev) =>
+                prev.map((m) =>
+                    m.id === chat.temp_id || m.isTemp ? formatMessage(chat) : m
+                )
+            );
+
+            processedMessageIds.current.add(chat.id);
             setNewMessage("");
         },
-        onError: (error, tempId) => {
-            // Remove temporary message if error occurs
-            setMessages(prev => prev.filter(m => m.id !== tempId));
+        onError: (_err, tempId) => {
+            setMessages((prev) => prev.filter((m) => m.id !== tempId));
             processedMessageIds.current.delete(tempId);
-        }
+        },
     });
 
     // Note: Handler for new incoming messages
@@ -204,12 +204,26 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
 
     // Note: Send message handler
     const handleSendMessage = () => {
-        if (!newMessage.trim()) return; // Don't send empty messages
-        const tempId = uuidv4(); // Generate temp ID for optimistic update
+        if (!newMessage.trim() || !roomData?.receiver?.id) return;
+
+        const tempId = uuidv4();
+
+        const tempMessage = {
+            id: tempId,
+            sender_id: userData.id,
+            text: newMessage,
+            sender: userData,
+            humanize_date: "sending...",
+            isTemp: true,
+        };
+
+        // optimistic UI
+        setMessages((prev) => [...prev, formatMessage(tempMessage)]);
         processedMessageIds.current.add(tempId);
-        sendMessage(tempId); // Trigger send mutation
-        inputRef.current?.focus(); // Keep focus on input
+
+        sendMessage(tempId);
     };
+
 
     // Note: Handle Enter key press for sending messages
     const handleKeyPress = (e) => {
@@ -234,7 +248,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
         <div className={`w-full grid gap-6 ${showChat ? "lg:grid-cols-3" : "lg:grid-cols-1"}`}>
 
             {/* ================= Left Side : Sold Book Details ================= */}
-            <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-sm">
+            <div className="lg:col-span-1 bg-white rounded-2xl p-6 shadow-sm h-fit">
 
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
@@ -319,7 +333,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
             {/* ================= Right Side : Chat with Buyer ================= */}
             {
                 showChat && (
-                    <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm flex flex-col">
+                    <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm flex flex-col h-[620px] overflow-y-auto">
 
                         <h2 className="text-lg font-semibold text-gray-900 mb-4">
                             {role === "seller" ? "Chat with Buyer" : "Chat with Seller"}
