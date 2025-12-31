@@ -18,8 +18,8 @@ const useUpdateShippingOrder = ({ refetchOrder, refetchChat }) => {
       toast.success(
         data?.message || "Shipping information updated successfully."
       );
-      refetchOrder();
-      refetchChat();
+      refetchOrder?.();
+      refetchChat?.();
     },
     onError: () => {
       toast.error("Failed to update shipping info");

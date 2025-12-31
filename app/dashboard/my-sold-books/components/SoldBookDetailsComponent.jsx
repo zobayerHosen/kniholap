@@ -82,7 +82,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
         },
         enabled: !!room_id,
     });
-    const updateShipping = useUpdateShippingOrder({ refetchOrder: soldBookRefetch, refetchChat: isFetching });
+    const updateShipping = useUpdateShippingOrder({ refetchOrder: soldBookRefetch, refetchChat: refetch });
     console.log("Room Data : ----->", roomData);
 
     // Note: Function to scroll to the bottom of the messages
@@ -381,13 +381,19 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
                     </div>
 
                     <button
-                        disabled={updateShipping.isPending}
+                        disabled={updateShipping.isPending || status === "shipped"}
                         onClick={handleUpdateShipping}
-                        className={`w-full border border-[#A5340C] font-bold py-3 px-6 rounded-xl bg-[#A5340C] text-white hover:bg-transparent hover:text-[#A5340C]`}
+                        className={`w-full font-bold py-3 px-6 rounded-xl border transition-all duration-300 ${updateShipping.isPending || status === "shipped"
+                            ? "bg-gray-300 text-gray-500 border-gray-300 cursor-not-allowed"
+                            : "bg-[#A5340C] text-white border-[#A5340C] hover:bg-transparent hover:text-[#A5340C]"
+                            }`}
                     >
-                        {updateShipping.isPending ? "Updating..." : "Update Shipping Info"}
+                        {updateShipping.isPending
+                            ? "Updating..."
+                            : status === "shipped"
+                                ? "Already Shipped"
+                                : "Update Shipping Info"}
                     </button>
-
                 </div>
             </div>
 
