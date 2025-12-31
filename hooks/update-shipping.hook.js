@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 
-const useUpdateShippingOrder = () => {
+const useUpdateShippingOrder = ({ refetchOrder, refetchChat }) => {
   const axiosInstance = axiosPrivateClient();
 
   return useMutation({
@@ -18,6 +18,8 @@ const useUpdateShippingOrder = () => {
       toast.success(
         data?.message || "Shipping information updated successfully."
       );
+      refetchOrder();
+      refetchChat();
     },
     onError: () => {
       toast.error("Failed to update shipping info");

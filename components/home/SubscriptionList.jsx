@@ -82,7 +82,7 @@ const SubscriptionList = () => {
                     {getPlanListData?.map((plan, index) => {
                         const isPopular = plan?.name?.toLowerCase().includes("premium") ||
                             plan?.name?.toLowerCase().includes("pro") ||
-                            index === 1; // Middle card as popular
+                            index === 1;
 
                         return (
                             <div
@@ -167,7 +167,7 @@ const SubscriptionList = () => {
                                                 </>
                                             ) : (
                                                 <>
-                                                    Start {plan?.name || "N/A"} Plan
+                                                    Start {plan?.name || "N/A"}
                                                     <FaBookOpen className="w-5 h-5" />
                                                 </>
                                             )}

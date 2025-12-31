@@ -23,14 +23,8 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     const { userData } = useUser();
     const axiosInstance = axiosPrivateClient();
 
-    // Note: Update shipping address
-    const updateShipping = useUpdateShippingOrder();
-    const [trackingNumber, setTrackingNumber] = useState("");
-    const [courierName, setCourierName] = useState("");
-
-
     // Note: get sold book details
-    const { data: getSoldBookDetails, isloading } = useQuery({
+    const { data: getSoldBookDetails, refetch: soldBookRefetch, isloading } = useQuery({
         queryKey: ['sold-book-details', params_id],
         queryFn: async () => {
             const response = await axiosInstance.get(`/auth/seller/order/details/${params_id}`);
@@ -58,6 +52,9 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
 
     const { title, author, cover_image, type, price } = book;
     const [imageSrc, setImageSrc] = useState(cover_image || dummyImage);
+    // Note: Update shipping address
+    const [trackingNumber, setTrackingNumber] = useState("");
+    const [courierName, setCourierName] = useState("");
 
     // Note: chating
     // State for new message input
@@ -85,6 +82,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
         },
         enabled: !!room_id,
     });
+    const updateShipping = useUpdateShippingOrder({ refetchOrder: soldBookRefetch, refetchChat: isFetching });
     console.log("Room Data : ----->", roomData);
 
     // Note: Function to scroll to the bottom of the messages
@@ -164,6 +162,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
 
             processedMessageIds.current.add(chat.id);
             setNewMessage("");
+            soldBookRefetch()
         },
         onError: (_err, tempId) => {
             setMessages((prev) => prev.filter((m) => m.id !== tempId));
@@ -382,11 +381,11 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
                     </div>
 
                     <button
-                        disabled={updateShipping.isLoading}
+                        disabled={updateShipping.isPending}
                         onClick={handleUpdateShipping}
-                        className="w-full border border-[#A5340C] font-bold py-3 px-6 rounded-xl bg-[#A5340C] text-white hover:bg-transparent hover:text-[#A5340C]"
+                        className={`w-full border border-[#A5340C] font-bold py-3 px-6 rounded-xl bg-[#A5340C] text-white hover:bg-transparent hover:text-[#A5340C]`}
                     >
-                        {updateShipping.isLoading ? "Updating..." : "Update Shipping Info"}
+                        {updateShipping.isPending ? "Updating..." : "Update Shipping Info"}
                     </button>
 
                 </div>

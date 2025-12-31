@@ -103,7 +103,7 @@ const CheckoutForm = () => {
         onError: (err) => {
             console.error("Subscription error:", err);
             // setError(err?.response?.data?.message)
-            toast.error(err?.response?.data?.message || "Subscription processing failed. Please contact support.");
+            // toast.error(err?.response?.data?.message || "Subscription processing failed. Please contact support.");
         },
     });
 

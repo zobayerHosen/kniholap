@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import SoldBookDetailsSkeleton from "@/components/dashboard/SoldBookDetailsSkeleton";
 import ErrorScreen from "@/components/common/ErrorScreen";
 import echo from "@/lib/echo";
+import toast from "react-hot-toast";
 
 const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
     const searchParams = useSearchParams();
@@ -22,7 +23,7 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
     const axiosInstance = axiosPrivateClient();
 
     // Note: get sold book details
-    const { data: getSoldBookDetails } = useQuery({
+    const { data: getSoldBookDetails, refetch: refetchOrderDetais } = useQuery({
         queryKey: ['purchased-book-details', params_id],
         queryFn: async () => {
             const response = await axiosInstance.get(`/auth/buyer/order/details/${params_id}`);
@@ -34,6 +35,7 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
 
     // Note: destructure all properties
     const {
+        id,
         order_number,
         total_amount,
         room_id,
@@ -161,6 +163,30 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
         },
     });
 
+    // Note: order confirmation mutation
+    const orderConfirmationMuttion = useMutation({
+        mutationKey: ["order-confirmation"],
+        mutationFn: async (id) => {
+            const response = await axiosInstance.post(`/auth/buyer/order/delivery/confirm`, {
+                order_id: id
+            });
+            return response?.data;
+        },
+        onSuccess: () => {
+            toast.success("Order confirmation successfully!")
+            refetchOrderDetais()
+        },
+        onError: (error) => {
+            console.log("Error", error)
+            toast.error("Something went wrong!")
+        }
+    });
+
+    // Note: handle confirmation handler
+    const handleOrderConfirmation = () => {
+        orderConfirmationMuttion.mutate(id);
+    };
+
     // Note: Handler for new incoming messages
     const handleNewMessage = useCallback((message) => {
         // Skip if messages has no ID or already processed
@@ -241,7 +267,8 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
     // Note: Error state
     if (roomDataError) {
         return <ErrorScreen refetch={refetch} />;
-    }
+    };
+
 
     // Note: main ui component
     return (
@@ -328,9 +355,28 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
                         {shipping_address}
                     </p>
                 </div>
+
+                {/* order confirmation button */}
+                <div className="w-full mt-5 flex justify-end">
+                    {status !== "completed" && (
+                        <div className="w-full mt-5 flex justify-end">
+                            <button
+                                onClick={handleOrderConfirmation}
+                                disabled={orderConfirmationMuttion.isPending}
+                                className={`w-full cursor-pointer text-center px-6 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${orderConfirmationMuttion.isPending
+                                    ? "bg-gray-400 text-white cursor-not-allowed blur-[1px]"
+                                    : "bg-gradient-to-r from-primary to-primary/80 text-white hover:shadow-lg"
+                                    }`}
+                            >
+                                {orderConfirmationMuttion.isPending ? "Confirming..." : "Confirm Order"}
+                            </button>
+                        </div>
+                    )}
+                </div>
+
             </div>
 
-            {/* ================= Right Side : Chat with Buyer ================= */}
+            {/* ================= Chat with Buyer ================= */}
             {
                 showChat && (
                     <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm flex flex-col h-[620px] overflow-y-auto">
