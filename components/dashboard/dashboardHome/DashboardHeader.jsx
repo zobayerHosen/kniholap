@@ -4,10 +4,43 @@ import { BiSearchAlt } from "react-icons/bi";
 import { MdOutlineNotificationsActive } from "react-icons/md";
 import dummyUserImage from "@/public/dummyUserImage.jpg"
 import { useUser } from "@/hooks/get-user.hook";
-
+import { Popover } from "antd";
+import { useAuth } from "@/hooks/auth.hook";
+import ConfirmLogoutModal from "@/components/common/ConfirmLogoutModal";
+import { useState } from "react";
 const DashboardHeader = () => {
-    const {userData} = useUser();
+    const { userData } = useUser()
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const { logout } = useAuth();
 
+    const closeSidebar = () => {
+        setIsSidebarOpen(false);
+    };
+
+    // Note: popover content
+    const popoverContent = (
+        <button
+            onClick={() => setShowLogoutModal(true)}
+            className="w-full flex items-center gap-2 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 rounded-md cursor-pointer">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h6a2 2 0 012 2v1"
+                />
+            </svg>
+            Logout
+        </button>
+    );
+
+    // Note: main ui
     return (
         <header className="w-full flex flex-col xs:flex-row items-center justify-between bg-[#A5340C] py-4 px-6 text-white md:gap-8 gap-3">
             {/* Search input with icon */}
@@ -33,15 +66,40 @@ const DashboardHeader = () => {
 
                 {/* user avatar */}
                 <div className="md:size-10 size-9 rounded-full cursor-pointer">
-                    <Image
-                        src={userData?.avatar || dummyUserImage}
-                        alt="user avatar"
-                        className="w-full h-full object-cover rounded-full"
-                        width={40}
-                        height={40}
-                    />
+                    {/* avatar + popover */}
+                    <Popover
+                        content={popoverContent}
+                        trigger="click"
+                        placement="bottomRight"
+                        overlayClassName="rounded-md"
+                        arrow={false}
+                    >
+                        <div className="md:size-10 size-9 rounded-full cursor-pointer">
+                            <Image
+                                src={userData?.avatar || dummyUserImage}
+                                alt="user avatar"
+                                className="w-full h-full object-cover rounded-full"
+                                width={40}
+                                height={40}
+                            />
+                        </div>
+                    </Popover>
                 </div>
             </div>
+
+            <ConfirmLogoutModal
+                isOpen={showLogoutModal}
+                onClose={() => setShowLogoutModal(false)}
+                onConfirm={() =>
+                    logout.mutate(undefined, {
+                        onSuccess: () => {
+                            setShowLogoutModal(false);
+                            closeSidebar(false)
+                        }
+                    })
+                }
+                isLoading={logout.isPending}
+            />
         </header>
     );
 };

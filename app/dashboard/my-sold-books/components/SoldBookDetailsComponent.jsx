@@ -82,6 +82,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
         },
         enabled: !!room_id,
     });
+    // Note: Update shipping address
     const updateShipping = useUpdateShippingOrder({ refetchOrder: soldBookRefetch, refetchChat: refetch });
     console.log("Room Data : ----->", roomData);
 
@@ -146,6 +147,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
                 `/auth/chat/send/${roomData?.receiver?.id}`,
                 {
                     text: newMessage,
+                    room_id: room_id
                 }
             );
             return response?.data?.data?.chat;
