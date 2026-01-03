@@ -9,7 +9,6 @@ import { useUser } from "@/hooks/get-user.hook";
 const AllSalesCalculate = () => {
     const { userData } = useUser();
     const { total_books, total_delivered, total_ratings } = userData || {};
-    console.log(userData)
 
     const allSalesCalculateData = [
         {
@@ -37,6 +36,7 @@ const AllSalesCalculate = () => {
             image: deliveredImg
         },
     ];
+    
     return (
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 2xl:gap-[30px] mt-5 2xl:mt-8">
             {

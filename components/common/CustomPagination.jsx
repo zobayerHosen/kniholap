@@ -13,15 +13,12 @@ const CustomPagination = ({
             <Pagination
                 showSizeChanger={showSizeChanger}
                 onChange={handlePageClick}
-                showLessItems
-                defaultCurrent={currentPage}
+                current={currentPage}
                 pageSize={perPage}
-                onShowSizeChange={handlePageClick}
                 total={totalItem}
                 pageSizeOptions={[4, 8, 16, 32]}
             />
         </div>
     )
-}
-
-export default CustomPagination
+};
+export default CustomPagination;

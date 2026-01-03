@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export function middleware(request) {
+export function proxy(request) {
   const { pathname } = request.nextUrl;
   const tokenName = process.env.AUTH_TOKEN_NAME || "kniholap_auth_token";
   const token = request.cookies.get(tokenName)?.value;
@@ -30,18 +30,18 @@ export function middleware(request) {
     pathname.startsWith(route)
   );
 
-  // 🔒 Redirect to login if accessing protected route without token
+  // Redirect to login if accessing protected route without token
   if (!token && isProtectedPath) {
     const loginUrl = new URL("/auth", request.url);
     loginUrl.searchParams.set("redirect", pathname); // optional: remember where user came from
     return NextResponse.redirect(loginUrl);
   }
-  // 🚫 Redirect to choose_interest if accessing public route while logged in and first time true
+  // Redirect to choose_interest if accessing public route while logged in and first time true
   if (token && isPublicPath && firstTime === "true") {
     return NextResponse.redirect(new URL("/choose_interests", request.url));
   }
 
-  // 🚫 Redirect to dashboard if accessing public route while logged in
+  // Redirect to dashboard if accessing public route while logged in
   if (token && isPublicPath) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }

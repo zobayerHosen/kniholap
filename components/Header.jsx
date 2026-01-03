@@ -32,7 +32,7 @@ const Header = () => {
                         {/* Notifications */}
                         <Notifications className={`sm:flex hidden`} />
                         {/* search */}
-                        <GlobalSearch className={`sm:flex hidden`} />
+                        {/* <GlobalSearch className={`sm:flex hidden`} /> */}
                         {/* sign in */}
                         {
                             !accessToken ? (
