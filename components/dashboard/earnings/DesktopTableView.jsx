@@ -18,7 +18,7 @@ const DesktopTableView = ({ payouts, renderStatusColor }) => {
                             key={index}
                             className="w-full bg-gray-50 hover:bg-gray-100 rounded-lg shadow-sm text-center"
                         >
-                            <td className="py-3 px-4 rounded-l-lg text-sm lg:text-base">{payout?.date}</td>
+                            <td className="py-3 px-4 rounded-l-lg text-sm lg:text-base">{payout?.created_at}</td>
                             <td className="py-3 px-4 text-sm lg:text-base">{payout?.amount}</td>
                             <td
                                 className={`w-full text-center py-3 px-4 flex items-center justify-center gap-2 rounded-r-lg ${renderStatusColor(

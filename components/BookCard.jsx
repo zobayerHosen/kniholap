@@ -23,6 +23,8 @@ const BookCard = ({ book = {}, layout }) => {
         is_bookmarked,
         published_at,
         no_of_reviews,
+        is_already_purchase,
+        total_sales,
         rating,
         categories = [],
         isbn
@@ -99,16 +101,17 @@ const BookCard = ({ book = {}, layout }) => {
                     <span>{Number(rating).toFixed(1)}</span>
                 </div>
                 <p className="text-sm md:text-base">Reviews: ({no_of_reviews} reviews)</p>
+                <p>Total Sales: {total_sales || "0"}</p>
             </div>
 
             <CommonBtn
-                className={`rounded-full !min-h-auto !h-[48px]`}
+                className={`rounded-full !min-h-auto !h-[48px] ${is_already_purchase && "bg-blue-400"}`}
                 link={true}
                 path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${book?.slug}`}`}
             >
-                {type === 'ebook' ? 'Continue reading' : 'View more'}
+                {type === 'ebook' ? 'Continue reading' : is_already_purchase ? "Already Purchased" : "View more"}
             </CommonBtn>
         </div>
-    )
+    );
 };
 export default BookCard;

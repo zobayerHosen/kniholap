@@ -3,7 +3,6 @@ import CommonDashboardTitle from "@/components/common/CommonDashboardTitle";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
-
 const EarningsTitle = () => {
     const axiosInstance = axiosPrivateClient();
 

@@ -1,55 +1,12 @@
 import CommonDashboardTitle from "@/components/common/CommonDashboardTitle";
-import CustomPagination from "@/components/common/CustomPagination";
+// import CustomPagination from "@/components/common/CustomPagination";
 import { BiCheckCircle } from "react-icons/bi";
 import DesktopTableView from "./DesktopTableView";
 
-const PayOutsList = () => {
-    const payouts = [
-        {
-            date: "20 Sept",
-            amount: "$150",
-            status: "Completed"
-        },
-        {
-            date: "24 Sept",
-            amount: "$220",
-            status: "Completed"
-        },
-        {
-            date: "23 Sept",
-            amount: "$180",
-            status: "Completed"
-        },
-        {
-            date: "22 Sept",
-            amount: "$120",
-            status: "Completed"
-        },
-        {
-            date: "21 Sept",
-            amount: "$200",
-            status: "Completed"
-        },
-        {
-            date: "20 Sept",
-            amount: "$150",
-            status: "Completed"
-        },
-        {
-            date: "21 Sept",
-            amount: "$200",
-            status: "In Progress"
-        },
-        {
-            date: "22 Sept",
-            amount: "$180",
-            status: "Pending"
-        },
-    ];
-
+const PayOutsList = ({ earningsData }) => {
     const renderStatusColor = (status) => {
         switch (status) {
-            case "Completed":
+            case "succeeded":
                 return "text-green-600";
             case "Pending":
                 return "text-yellow-500";
@@ -72,13 +29,13 @@ const PayOutsList = () => {
 
                 {/* Mobile Cards View */}
                 <div className="block md:hidden space-y-3">
-                    {payouts?.map((payout, index) => (
+                    {earningsData?.map((payout, index) => (
                         <div
                             key={index}
                             className="bg-gray-50 hover:bg-gray-100 rounded-lg shadow-sm p-4"
                         >
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm font-medium text-gray-600">Date:</span>
+                                <span className="text-sm font-medium text-gray-600 how">Date:</span>
                                 <span className="text-sm">{payout?.date}</span>
                             </div>
                             <div className="flex justify-between items-center mb-2">
@@ -102,41 +59,19 @@ const PayOutsList = () => {
 
                 {/* Desktop Table View */}
                 <DesktopTableView
-                    payouts={payouts}
+                    payouts={earningsData}
                     renderStatusColor={renderStatusColor}
                 />
 
-                <CustomPagination
+                {/* <CustomPagination
                     perPage={10}
-                    totalItem={payouts.length}
+                    totalItem={earningsData?.length}
                     currentPage={1}
                     className="mt-4 md:mt-6"
                     showSizeChanger={true}
-                />
-
-                {/* Pagination */}
-                {/* <div className="flex justify-end items-center gap-3 mt-6">
-                    <button className="px-3 py-1 border rounded-md text-gray-600 hover:bg-gray-100">
-                        Prev
-                    </button>
-                    {[1, 2, 3, 4, 5].map((num) => (
-                        <button
-                            key={num}
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${num === 2
-                                ? "bg-orange-500 text-white"
-                                : "text-gray-600 hover:bg-gray-100"
-                                }`}
-                        >
-                            {num}
-                        </button>
-                    ))}
-                    <button className="px-3 py-1 bg-orange-500 text-white rounded-md hover:bg-orange-600">
-                        Next
-                    </button>
-                </div> */}
+                /> */}
             </div>
         </div>
     );
 };
-
 export default PayOutsList;

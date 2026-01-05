@@ -1,6 +1,10 @@
+"use client";
+import { useQuery } from "@tanstack/react-query";
 import BalanceSummaryCard from "./BalanceSummaryCard";
 import PayOutsList from "./PayOutsList";
+import { axiosPrivateClient } from "@/lib/axios.private.client";
 
+// Note: dummy data
 const balanceCardData = [
     {
         id: 1,
@@ -10,7 +14,7 @@ const balanceCardData = [
     {
         id: 2,
         amount: 420,
-        balanceText: "Total Sales (This Month):"
+        balanceText: "Total Sales:"
     },
     {
         id: 3,
@@ -20,6 +24,17 @@ const balanceCardData = [
 ];
 
 const BalanceSummary = () => {
+    const axiosInstance = axiosPrivateClient();
+
+    const { data: earningsData, isLoading, isFetched, isError } = useQuery({
+        queryKey: ["earnings-data"],
+        queryFn: async () => {
+            const response = await axiosInstance.get(`/auth/account/transactions`);
+            return response?.data?.data || []
+        }
+    });
+
+    // Note: main ui component
     return (
         <div className="w-full mt-8">
             <p className="text-2xl text-[#0A0910] font-medium mb-4 lg:mb-8">Balance / Summary</p>
@@ -38,7 +53,12 @@ const BalanceSummary = () => {
                 }
             </div>
 
-            <PayOutsList />
+            <PayOutsList
+                earningsData={earningsData}
+                isLoading={isLoading}
+                isFetched={isFetched}
+                isError={isError}
+            />
         </div>
     );
 };
