@@ -10,6 +10,7 @@ const PersonalInfrmationForm = () => {
     const { userData, userRefetch } = useUser()
     const axiosSecure = axiosPrivateClient();
 
+    // Note: react hook form
     const {
         register,
         handleSubmit,
@@ -52,10 +53,12 @@ const PersonalInfrmationForm = () => {
                     name="first_name"
                     placeholder="First name"
                     register_as="first_name"
+                    value={userData?.first_name}
                     label="First Name:"
                     validationRules={{
                         required: "This field is required",
                     }}
+
                 />
                 {/* Last name */}
                 <CommonInputWrapper
@@ -65,6 +68,7 @@ const PersonalInfrmationForm = () => {
                     name="last_name"
                     placeholder="Last name"
                     register_as="last_name"
+                    value={userData?.last_name}
                     label="Last Name:"
                     validationRules={{
                         required: "This field is required",
@@ -103,6 +107,7 @@ const PersonalInfrmationForm = () => {
                             name="house"
                             placeholder="House"
                             register_as="house"
+                            value={userData?.house}
                             label="House:"
                             validationRules={{
                                 required: "This field is required",
@@ -116,6 +121,7 @@ const PersonalInfrmationForm = () => {
                             name="road"
                             placeholder="Road"
                             register_as="road"
+                            value={userData?.road}
                             label="Road:"
                             validationRules={{
                                 required: "This field is required",
@@ -129,6 +135,7 @@ const PersonalInfrmationForm = () => {
                             name="city"
                             placeholder="City"
                             register_as="city"
+                            value={userData?.city}
                             label="City:"
                             validationRules={{
                                 required: "This field is required",

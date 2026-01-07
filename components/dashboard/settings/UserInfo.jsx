@@ -1,5 +1,4 @@
 import { useUser } from '@/hooks/get-user.hook';
-import { FaCrown } from 'react-icons/fa';
 
 const UserInfo = () => {
     const { userData } = useUser();
@@ -30,25 +29,25 @@ const UserInfo = () => {
                         </div>
                     </div>
                 </div>
-
-                {/* Edit button */}
-                <button className="w-full lg:w-fit cursor-pointer flex items-center justify-center gap-2 bg-[#F84E12]/10 text-[#F84E12] border border-[#F84E12] px-4 sm:px-6 py-2 rounded-lg font-medium hover:bg-[#F84E12] hover:text-white transition">
-                    <FaCrown className="text-lg" />
-                    Edit Profile
-                </button>
             </div>
 
             {/* user info card */}
             <div className="w-full mt-8 lg:mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
                 {/* User Info Card */}
                 <div className="flex flex-col gap-1.5 md:gap-3 bg-white shadow-sm border border-gray-200 rounded-xl lg:rounded-2xl p-4 lg:p-6">
-                    <h3 className="font-semibold text-base lg:text-lg">Full name</h3>
-                    <p className="text-[#1E1E1E] font-medium">{userData?.first_name} {userData?.last_name}</p>
+                    <div className='w-full flex sm:gap-10 gap-8'>
+                        <div className='space-y-1.5'>
+                            <h3 className="font-semibold text-base lg:text-lg">Full name</h3>
+                            <p className="text-[#1e1e1ec9] font-medium text-sm">{userData?.first_name} {userData?.last_name}</p>
+                        </div>
 
-                    <h3 className="font-semibold text-base lg:text-lg">Email Address</h3>
-                    <p className="text-[#1E1E1E] font-medium text-sm lg:text-base">
-                        {userData?.email}
-                    </p>
+                        <div className='space-y-1.5'>
+                            <h3 className="font-semibold text-base lg:text-lg">Email Address</h3>
+                            <p className="text-[#1e1e1ec9] font-medium text-sm">
+                                {userData?.email}
+                            </p>
+                        </div>
+                    </div>
 
                     {/* house road information */}
                     <div className="grid grid-cols-3 gap-3 mt-4 lg:mt-6 text-sm text-gray-700">

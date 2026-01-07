@@ -13,10 +13,13 @@ import { useUser } from "@/hooks/get-user.hook";
 import { useMutation } from "@tanstack/react-query";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 const SettingsContent = () => {
-    const { userData, userRefetch } = useUser();
+    const { userData, userRefetch, isLoading } = useUser();
     const axiosPrivate = axiosPrivateClient();
+    const [avatarPreview, setAvatarPreview] = useState(null);
+    const [coverPreview, setCoverPreview] = useState(null);
 
     // Note: handle cover and profile image change mutation
     const handleImagesChange = useMutation({
@@ -29,31 +32,44 @@ const SettingsContent = () => {
             return response?.data;
         },
 
-        onSuccess: (data) => {
-            toast.success(data?.message || "Images updated successfully");
-            userRefetch()
+        onSuccess: () => {
+            toast.success("Images updated successfully");
+            setAvatarPreview(null);
+            setCoverPreview(null);
+            userRefetch();
         },
-        onError: (error) => {
-            console.error("Error updating images:", error);
+
+        onError: () => {
+            toast.error("Image update failed");
+            setAvatarPreview(null);
+            setCoverPreview(null);
         }
     });
+
+    const { isPending } = handleImagesChange;
+
 
     // Note: handle cover and profile image change
     const handleCoverImageChange = (e) => {
         const file = e.target.files[0];
+        if (!file) return;
+
+        const previewUrl = URL.createObjectURL(file);
         const formData = new FormData();
 
         if (e.target.name === "avatar") {
+            setAvatarPreview(previewUrl);
             formData.append("avatar", file);
         } else {
+            setCoverPreview(previewUrl);
             formData.append("cover", file);
         }
+
         handleImagesChange.mutate(formData);
     };
 
-    const onChange = checked => {
-        // console.log(`switch to ${checked}`);
-    };
+    if(isLoading) <><h1 className="text-3xl font-semibold">Loading....</h1></>
+
 
     // Note: main ui component
     return (
@@ -61,12 +77,12 @@ const SettingsContent = () => {
             {/* cover image */}
             <div className="relative w-full h-[200px] sm:h-[280px] md:h-[350px] lg:h-[430px] rounded-xl">
                 <Image
-                    src={userData?.cover || coverImg}
+                    src={coverPreview || userData?.cover || coverImg}
                     alt="Cover"
-                    width={720}
-                    height={200}
-                    className="w-full h-full object-cover rounded-xl"
+                    fill
+                    className={`object-cover rounded-xl ${isPending ? "opacity-60" : ""}`}
                 />
+
                 <label
                     htmlFor="cover"
                     className="cursor-pointer absolute right-2 sm:right-3 md:right-4 lg:right-5 bottom-2 sm:bottom-3 flex items-center justify-center bg-[#F84E12] size-10 sm:size-12 md:size-14 rounded-full shadow-lg"
@@ -78,18 +94,20 @@ const SettingsContent = () => {
                         id="cover"
                         name="cover"
                         className="hidden"
+                        disabled={isPending}
                     />
                 </label>
 
                 {/* Profile Image */}
                 <div className="absolute -bottom-16 sm:-bottom-18 md:-bottom-20 left-4 sm:left-6 md:left-8 lg:left-12 size-[100px] sm:size-[120px] md:size-[140px] lg:size-[160px] rounded-full ring-8 sm:ring-10 md:ring-12 lg:ring-[15px] ring-[#F5F5F9] bg-white">
                     <Image
-                        src={userData?.avatar || profileImg}
+                        src={avatarPreview || userData?.avatar || profileImg}
                         width={520}
                         height={200}
                         alt="Profile"
-                        className="w-full h-full object-cover rounded-full"
+                        className={`w-full h-full object-cover rounded-full ${isPending ? "opacity-60" : ""}`}
                     />
+
                     <label
                         htmlFor="avatar"
                         className="cursor-pointer absolute right-1 bottom-1 sm:bottom-2 flex items-center justify-center bg-[#F84E12] size-6 sm:size-7 md:size-8 rounded-full shadow-md">
@@ -101,6 +119,7 @@ const SettingsContent = () => {
                             id="avatar"
                             name="avatar"
                             className="hidden"
+                            disabled={isPending}
                         />
                     </label>
                 </div>
@@ -119,7 +138,6 @@ const SettingsContent = () => {
                             Notifications
                         </p>
                         <Switch
-                            onChange={onChange}
                             className="custom-switch scale-75 sm:scale-90 md:scale-100"
                         />
                     </div>
