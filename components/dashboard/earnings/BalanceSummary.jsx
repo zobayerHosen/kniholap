@@ -26,7 +26,7 @@ const balanceCardData = [
 const BalanceSummary = () => {
     const axiosInstance = axiosPrivateClient();
 
-    const { data: earningsData, isLoading, isFetched, isError } = useQuery({
+    const { data: earningsData, isLoading, isFetching, isError } = useQuery({
         queryKey: ["earnings-data"],
         queryFn: async () => {
             const response = await axiosInstance.get(`/auth/account/transactions`);
@@ -56,7 +56,7 @@ const BalanceSummary = () => {
             <PayOutsList
                 earningsData={earningsData}
                 isLoading={isLoading}
-                isFetched={isFetched}
+                isFetching={isFetching}
                 isError={isError}
             />
         </div>

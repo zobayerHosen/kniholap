@@ -3,7 +3,7 @@ import CommonDashboardTitle from "@/components/common/CommonDashboardTitle";
 import { BiCheckCircle } from "react-icons/bi";
 import DesktopTableView from "./DesktopTableView";
 
-const PayOutsList = ({ earningsData }) => {
+const PayOutsList = ({ earningsData, isLoading, isFetching, isError }) => {
     const renderStatusColor = (status) => {
         switch (status) {
             case "succeeded":
@@ -61,6 +61,9 @@ const PayOutsList = ({ earningsData }) => {
                 <DesktopTableView
                     payouts={earningsData}
                     renderStatusColor={renderStatusColor}
+                    isLoading={isLoading}
+                    isFetching={isFetching}
+                    isError={isError}
                 />
 
                 {/* <CustomPagination
