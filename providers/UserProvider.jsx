@@ -19,7 +19,7 @@ export default function UserProvider({ children, serverUserData = null, serverAc
     const { data: userData, refetch: userRefetch, isLoading, isFetching } = useQuery({
         queryKey: ["userData", accessToken],
         queryFn: () => getUserProfile(axiosInstance),
-        enabled: false,
+        enabled: !!accessToken,
         initialData: serverUserData,
     });
     // isLoggedIn and userRole

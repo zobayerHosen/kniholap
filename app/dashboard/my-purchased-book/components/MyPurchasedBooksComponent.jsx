@@ -23,7 +23,7 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
     const axiosInstance = axiosPrivateClient();
 
     // Note: get sold book details
-    const { data: getSoldBookDetails, refetch: refetchOrderDetais } = useQuery({
+    const { data: getSoldBookDetails, refetch: refetchOrderDetais, isLoading: purchasedLoading, isFetching: purchasedFetching } = useQuery({
         queryKey: ['purchased-book-details', params_id],
         queryFn: async () => {
             const response = await axiosInstance.get(`/auth/buyer/order/details/${params_id}`);
@@ -260,7 +260,7 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
     };
 
     // Note: Loading state
-    if (roomDataLoading || isFetching || roomDataLoading) {
+    if (roomDataLoading || isFetching || purchasedLoading || purchasedFetching) {
         return <SoldBookDetailsSkeleton showChat={showChat} />;
     }
 
