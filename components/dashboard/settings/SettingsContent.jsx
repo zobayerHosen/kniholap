@@ -124,7 +124,7 @@ const SettingsContent = () => {
                 <UserInfo />
 
                 {/* Settings Buttons */}
-                <div className="mt-6 sm:mt-8 md:mt-10 space-y-3 sm:space-y-4">
+                {/* <div className="mt-6 sm:mt-8 md:mt-10 space-y-3 sm:space-y-4">
                     <div className="cursor-pointer w-full flex justify-between items-center bg-white border border-gray-200 rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-5 py-3 sm:py-4 text-gray-700 font-medium shadow-sm hover:bg-gray-50 transition">
                         <p className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg">
                             <MdNotificationsActive className="text-xl sm:text-2xl" />
@@ -143,7 +143,7 @@ const SettingsContent = () => {
 
                         <TbExchange className="text-xl sm:text-2xl" />
                     </button>
-                </div>
+                </div> */}
             </div>
 
             <PersonalInformation />
