@@ -25,12 +25,12 @@ export const metadata = {
     title: "Kniholap",
     description:
       "Your One-Stop Book Marketplace & Digital Library.Trade physical books, read premium eBooks, and connect with readers worldwide.",
-    url: BASE_URL, // Your actual URL
+    url: BASE_URL,
     siteName: "Kniholap",
     images: [
       {
-        url: "/images/meta_images/facebook_meta.png", // Local path (inside `public`)
-        width: 1200, // Recommended OG image size
+        url: "/images/meta_images/facebook_meta.png",
+        width: 1200,
         height: 630,
         alt: "Kniholap - Your One-Stop Book Marketplace & Digital Library",
       },

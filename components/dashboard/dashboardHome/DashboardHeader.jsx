@@ -1,5 +1,5 @@
 "use client"
-import Image from "next/image";
+// import Image from "next/image";
 import { BiSearchAlt } from "react-icons/bi";
 import { MdOutlineNotificationsActive } from "react-icons/md";
 import dummyUserImage from "@/public/dummyUserImage.jpg"
@@ -75,7 +75,7 @@ const DashboardHeader = () => {
                         arrow={false}
                     >
                         <div className="md:size-10 size-9 rounded-full cursor-pointer">
-                            <Image
+                            <img
                                 src={userData?.avatar || dummyUserImage}
                                 alt="user avatar"
                                 className="w-full h-full object-cover rounded-full"

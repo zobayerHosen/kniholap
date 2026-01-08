@@ -45,9 +45,7 @@ const SettingsContent = () => {
             setCoverPreview(null);
         }
     });
-
     const { isPending } = handleImagesChange;
-
 
     // Note: handle cover and profile image change
     const handleCoverImageChange = (e) => {
@@ -67,9 +65,6 @@ const SettingsContent = () => {
 
         handleImagesChange.mutate(formData);
     };
-
-    if(isLoading) <><h1 className="text-3xl font-semibold">Loading....</h1></>
-
 
     // Note: main ui component
     return (
@@ -100,10 +95,8 @@ const SettingsContent = () => {
 
                 {/* Profile Image */}
                 <div className="absolute -bottom-16 sm:-bottom-18 md:-bottom-20 left-4 sm:left-6 md:left-8 lg:left-12 size-[100px] sm:size-[120px] md:size-[140px] lg:size-[160px] rounded-full ring-8 sm:ring-10 md:ring-12 lg:ring-[15px] ring-[#F5F5F9] bg-white">
-                    <Image
-                        src={avatarPreview || userData?.avatar || profileImg}
-                        width={520}
-                        height={200}
+                    <img
+                        src={userData?.avatar}
                         alt="Profile"
                         className={`w-full h-full object-cover rounded-full ${isPending ? "opacity-60" : ""}`}
                     />
