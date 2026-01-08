@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import bell from "@/public/icons/bell.png";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IoNotificationsOutline } from "react-icons/io5";
 
 const dummyNotifications = [
@@ -17,17 +17,34 @@ const dummyNotifications = [
 
 const Notifications = ({ className }) => {
     const [isNotifications, setIsNotifications] = useState(false);
+    const notificationRef = useRef(null);
     const PER_PAGE = 3;
     const [perPage, setPerPage] = useState(PER_PAGE);
     const visibleNotifications = dummyNotifications.slice(0, perPage);
     const hasMore = perPage < dummyNotifications.length;
 
+    // Note: click outside to close notification popup
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                notificationRef.current &&
+                !notificationRef.current.contains(event.target)
+            ) {
+                setIsNotifications(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
     // Note: main ui
     return (
         <div
             title="Notification"
+            ref={notificationRef}
             className={cn(
-                "relative size-10 flex items-center justify-center p-2 bg-primary rounded-lg shrink-0",
+                "relative size-10 flex items-center justify-center p-2 bg-primary rounded-lg shrink-0 z-100",
                 className
             )}
             onClick={() => setIsNotifications(!isNotifications)}
@@ -88,5 +105,4 @@ const Notifications = ({ className }) => {
         </div>
     );
 };
-
 export default Notifications;
