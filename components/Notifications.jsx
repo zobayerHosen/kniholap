@@ -44,7 +44,7 @@ const Notifications = ({ className }) => {
             title="Notification"
             ref={notificationRef}
             className={cn(
-                "relative size-10 flex items-center justify-center p-2 bg-primary rounded-lg shrink-0 z-100",
+                "cursor-pointer relative size-10 flex items-center justify-center p-2 bg-primary rounded-lg shrink-0 z-100",
                 className
             )}
             onClick={() => setIsNotifications(!isNotifications)}
