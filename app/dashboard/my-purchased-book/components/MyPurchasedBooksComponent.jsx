@@ -140,6 +140,7 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
                 `/auth/chat/send/${roomData?.receiver?.id}`,
                 {
                     text: newMessage,
+                    room_id: room_id
                 }
             );
             return response?.data?.data?.chat;
