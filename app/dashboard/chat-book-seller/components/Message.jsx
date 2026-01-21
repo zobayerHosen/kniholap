@@ -13,8 +13,7 @@ const Message = ({ message }) => {
         sender_id,
         text,
         humanize_date,
-        sender = {},
-        receiver_id
+        sender = {}
     } = message;
 
     const isMe = userData?.id === sender_id;

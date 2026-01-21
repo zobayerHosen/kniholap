@@ -65,11 +65,10 @@ const navLinks = [
 const Sidebar = () => {
     const pathName = usePathname();
     const searchParams = useSearchParams();
-    const bookType = searchParams.get("type"); // sold | purchased
+    const bookType = searchParams.get("type"); // Note: sold | purchased
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const { logout } = useAuth()
-
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);

@@ -6,8 +6,11 @@ import { useState } from "react";
 import dummyImage from "@/public/dummyImage.png"
 import useBookMarks from "@/hooks/bookmarks.hook";
 import DOMPurify from "isomorphic-dompurify";
+import useCheckout from "@/hooks/checkout.hook";
+import CheckoutButton from "./library/books/details/CheckoutButton";
 const BookCard = ({ book = {}, layout }) => {
     const { handleBookMarksMutation } = useBookMarks();
+    const { handleCheckoutMutation, isError, setIsError } = useCheckout()
 
     // Note: destructure all properties
     const {
@@ -15,21 +18,16 @@ const BookCard = ({ book = {}, layout }) => {
         slug,
         author_name,
         cover_image,
-        images = [],
         title,
         type,
         description,
-        is_premium,
         is_bookmarked,
-        published_at,
         no_of_reviews,
         is_already_purchase,
         total_sales,
-        rating,
-        categories = [],
-        isbn
+        rating
     } = book || {}
-    console.log("book: --->", book)
+
     const [imgSrc, setImgSrc] = useState(cover_image || dummyImage);
     const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);
     const descriptionSanitized = DOMPurify.sanitize(description || "")
@@ -71,13 +69,14 @@ const BookCard = ({ book = {}, layout }) => {
                         {/* <p className="md:text-base text-sm line-clamp-2 md:line-clamp-3 lg:line-clamp-6">{description}</p> */}
                         <p className="md:text-base text-sm line-clamp-2 md:line-clamp-3 lg:line-clamp-6" dangerouslySetInnerHTML={{ __html: descriptionSanitized }} />
                     </div>
-                    <CommonBtn
+                    <CheckoutButton book={book} />
+                    {/* <CommonBtn
                         className={`rounded-full !min-h-auto !h-[48px]`}
                         link={true}
                         path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${book?.slug}`}`}
                     >
                         {type === 'ebook' ? 'Continue reading' : 'Buy Now'}
-                    </CommonBtn>
+                    </CommonBtn> */}
                 </div>
             </div>
         )

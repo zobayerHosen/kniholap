@@ -1,7 +1,6 @@
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import toast from "react-hot-toast";
 
 const useCheckout = () => {
   const axiosInstance = axiosPrivateClient();

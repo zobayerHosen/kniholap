@@ -51,7 +51,15 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     } = getSoldBookDetails || {};
 
     const { title, author, cover_image, type, price } = book;
-    const [imageSrc, setImageSrc] = useState(cover_image || dummyImage);
+    const [imageSrc, setImageSrc] = useState(dummyImage);
+    useEffect(() => {
+        if (cover_image) {
+            setImageSrc(cover_image);
+        } else {
+            setImageSrc(dummyImage);
+        }
+    }, [cover_image]);
+
     // Note: Update shipping address
     const [trackingNumber, setTrackingNumber] = useState("");
     const [courierName, setCourierName] = useState("");

@@ -4,7 +4,7 @@ import useCheckout from "@/hooks/checkout.hook";
 import Modal from "antd/es/modal/Modal";
 
 const CheckoutButton = ({ book }) => {
-    const { id } = book || {};
+    const { id, is_already_purchase } = book || {};
     const { handleCheckoutMutation, isError, setIsError } = useCheckout();
 
     // Note: handle checkout mutation
@@ -41,7 +41,7 @@ const CheckoutButton = ({ book }) => {
                     disabled={handleCheckoutMutation.isPending}
                     className="rounded-full hover:opacity-90 hover:bg-secondary transition-colors duration-300 hover:text-white"
                 >
-                    {handleCheckoutMutation.isPending ? "Loading..." : "Buy Now"}
+                    {handleCheckoutMutation.isPending ? "Loading..." : is_already_purchase ? "Already Purchased" : "Buy Now"}
                 </CommonBtn>
             )}
         </>

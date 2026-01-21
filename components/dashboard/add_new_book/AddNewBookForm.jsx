@@ -10,14 +10,12 @@ import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { useOptions } from "@/hooks/options.hook";
 import toast from "react-hot-toast";
 
-const genreOptions = [/* your genres */];
-
 const AddNewBookForm = () => {
     const axiosInstance = axiosPrivateClient();
-    const [coverFile, setCoverFile] = useState(null);           // For cover image
+    const [coverFile, setCoverFile] = useState(null);
     const [coverPreview, setCoverPreview] = useState(null);
-    const [subImages, setSubImages] = useState([]);             // Array of files
-    const [subImagePreviews, setSubImagePreviews] = useState([]); // Array of preview URLs
+    const [subImages, setSubImages] = useState([]);
+    const [subImagePreviews, setSubImagePreviews] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { categoryList } = useOptions();
 
@@ -31,14 +29,10 @@ const AddNewBookForm = () => {
         handleSubmit,
         control,
         formState: { errors },
-        setValue,
-        watch
+        reset
     } = useForm();
 
-    // Watch selected categories (for multiple select)
-    const selectedCategories = watch("category_ids");
-
-    // Handle Cover Image Change
+    // Note: Handle Cover Image Change
     const handleCoverChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -49,14 +43,14 @@ const AddNewBookForm = () => {
         }
     };
 
-    // Remove Cover Image
+    // Note: Remove Cover Image
     const removeCover = () => {
         setCoverFile(null);
         setCoverPreview(null);
         document.getElementById('cover_image').value = '';
     };
 
-    // Handle Sub Images Change (Multiple)
+    // Note: Handle Sub Images Change (Multiple)
     const handleSubImagesChange = (e) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) return;
@@ -75,17 +69,17 @@ const AddNewBookForm = () => {
         });
     };
 
-    // Remove Single Sub Image
+    // Note: Remove Single Sub Image
     const removeSubImage = (index) => {
         setSubImages(prev => prev.filter((_, i) => i !== index));
         setSubImagePreviews(prev => prev.filter((_, i) => i !== index));
     };
 
-    // Open Success Modal
+    // Note: Open Success Modal
     const showModal = () => setIsModalOpen(true);
     const handleCancel = () => setIsModalOpen(false);
 
-    // Mutation to Add Book
+    // Note: Mutation to Add Book
     const mutation = useMutation({
         mutationFn: async (formData) => {
             const response = await axiosInstance.post('/auth/seller/book/store', formData, {
@@ -95,13 +89,18 @@ const AddNewBookForm = () => {
         },
         onSuccess: (data) => {
             showModal();
+            setCoverFile(null);
+            setCoverPreview(null);
+            setSubImages(null);
+            setSubImagePreviews(null);
+            reset();
         },
         onError: (error) => {
             toast.error(error.response?.data?.message || "Failed to publish book. Please try again.");
         }
     });
 
-    // Form Submit Handler
+    // Note: Form Submit Handler
     const onSubmit = (data) => {
         const formData = new FormData();
 
@@ -116,12 +115,12 @@ const AddNewBookForm = () => {
         formData.append('description', data.description);
         formData.append('shipping_cost', data.shipping_cost)
 
-        // Append categories as array 
-        if (data.category_ids && data.category_ids.length > 0) {
-            data.category_ids.forEach(id => formData.append('category_ids[]', id));
+        // Note: Append categories as array 
+        if (data?.category_ids && data?.category_ids?.length > 0) {
+            data?.category_ids?.forEach(id => formData.append('category_ids[]', id));
         }
 
-        // Append cover image
+        // Note: Append cover image
         if (coverFile) {
             formData.append('cover_image', coverFile);
         }
@@ -193,9 +192,9 @@ const AddNewBookForm = () => {
                             multiple
                             onChange={handleSubImagesChange}
                         />
-                        {subImagePreviews.length > 0 ? (
+                        {subImagePreviews?.length > 0 ? (
                             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
-                                {subImagePreviews.map((preview, index) => (
+                                {subImagePreviews?.map((preview, index) => (
                                     <div key={index} className="relative group">
                                         <img src={preview} alt={`Preview ${index + 1}`} className="w-full h-32 object-cover rounded-lg shadow" />
                                         <button
@@ -330,7 +329,7 @@ const AddNewBookForm = () => {
                         }
                     />
                     {/* shipping cost */}
-                    <CommonInputWrapper 
+                    <CommonInputWrapper
                         label="Shipping Cost"
                         type="number"
                         name="shipping_cost"
@@ -342,7 +341,7 @@ const AddNewBookForm = () => {
                             {
                                 required: "Shipping Cost is required"
                             }
-                        }                    
+                        }
                     />
                 </div>
 

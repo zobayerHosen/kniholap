@@ -49,7 +49,14 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
     } = getSoldBookDetails || {};
 
     const { title, author, cover_image, type, price } = book;
-    const [imageSrc, setImageSrc] = useState(cover_image || dummyImage);
+    const [imageSrc, setImageSrc] = useState(dummyImage);
+    useEffect(() => {
+        if (cover_image) {
+            setImageSrc(cover_image);
+        } else {
+            setImageSrc(dummyImage);
+        }
+    }, [cover_image]);
 
     // Note: chating
     // State for new message input
@@ -293,7 +300,7 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
                     {/* Book Image */}
                     <div className="relative w-full sm:w-40 h-52 bg-gray-50 rounded-xl overflow-hidden">
                         <Image
-                            src={imageSrc}
+                            src={imageSrc || imageSrc}
                             alt={title || ""}
                             fill
                             className="object-contain p-4"

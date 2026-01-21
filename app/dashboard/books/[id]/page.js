@@ -1,7 +1,7 @@
 import EditBookForm from "../../../../components/dashboard/add_new_book/EditBookForm";
 
-const BookEidtPage = ({ params }) => {
-  const { id } = params;  
+const BookEidtPage = async({ params }) => {
+  const { id } = await params;  
   //   Note: main ui component
   return (
     <div className="w-full">

@@ -243,15 +243,6 @@ const EditBookForm = ({ paramsId }) => {
                                         />
                                         <button
                                             type="button"
-                                            // onClick={(e) => {
-                                            //     // e.stopPropagation();
-                                            //     // // Check if it's an existing image (URL) or new file (data URL)
-                                            //     // if (preview.startsWith('blob:')) {
-                                            //     //     removeSubImage(index);
-                                            //     // } else {
-                                            //     //     removeExistingSubImage(index);
-                                            //     // }
-                                            // }}
                                             onClick={handleDelete}
                                             className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition"
                                         >
@@ -278,7 +269,7 @@ const EditBookForm = ({ paramsId }) => {
                     )}
                 </div>
 
-                {/* Rest of your inputs */}
+                {/* inputs field */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     {/* book title */}
                     <CommonInputWrapper

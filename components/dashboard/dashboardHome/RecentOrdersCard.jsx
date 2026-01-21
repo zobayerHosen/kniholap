@@ -15,19 +15,14 @@ const RecentOrdersCard = ({ item = {}, layout }) => {
         slug,
         author_name,
         cover_image,
-        images = [],
         title,
         type,
         description,
-        is_premium,
         is_bookmarked,
-        published_at,
         no_of_reviews,
         is_already_purchase,
         total_sales,
         rating,
-        categories = [],
-        isbn
     } = item || {}
     const [imgSrc, setImgSrc] = useState(cover_image || dummyImage);
     const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);

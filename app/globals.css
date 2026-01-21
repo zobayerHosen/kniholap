@@ -161,10 +161,15 @@ body {
   background: transparent !important;
   box-shadow: none !important;
 }
-/* hover color */
+/* Note: hover color */
 .ant-select-item-option-active {
   color: black !important;
   background-color: #f0e5da !important;
+}
+/* Note: add new book select background transparent */
+.ant-select.ant-select-outlined {
+  background: #eeeeec !important;
+  border: 0;
 }
 
 /* Note: language switcher custom css start */
