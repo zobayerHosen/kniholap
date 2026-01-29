@@ -4,25 +4,6 @@ import BalanceSummaryCard from "./BalanceSummaryCard";
 import PayOutsList from "./PayOutsList";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 
-// Note: dummy data
-const balanceCardData = [
-    {
-        id: 1,
-        amount: 300,
-        balanceText: "Current Balance:"
-    },
-    {
-        id: 2,
-        amount: 420,
-        balanceText: "Total Sales:"
-    },
-    {
-        id: 3,
-        amount: 420,
-        balanceText: "Withdrawable Amount:"
-    },
-];
-
 const BalanceSummary = () => {
     const axiosInstance = axiosPrivateClient();
 
@@ -33,6 +14,30 @@ const BalanceSummary = () => {
             return response?.data?.data || []
         }
     });
+    const earningsTransactions = earningsData?.transactions || []
+    const summaryData = earningsData?.summary;
+
+    // Note: transation cards
+    const balanceCards = [
+        {
+            id: 1,
+            amount: summaryData?.current_available_balance,
+            balanceText: "Current Balance",
+            currency: summaryData?.currency,
+        },
+        {
+            id: 2,
+            amount: summaryData?.total_received_from_platform,
+            balanceText: "Total Sales",
+            currency: summaryData?.currency,
+        },
+        {
+            id: 3,
+            amount: summaryData?.current_total_balance,
+            balanceText: "Withdrawable Amount",
+            currency: summaryData?.currency,
+        },
+    ];
 
     // Note: main ui component
     return (
@@ -42,7 +47,7 @@ const BalanceSummary = () => {
             {/* balance card */}
             <div className="w-full grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6">
                 {
-                    balanceCardData?.map((item) => {
+                    balanceCards?.map((item) => {
                         return (
                             <BalanceSummaryCard
                                 key={item?.id}
@@ -54,7 +59,7 @@ const BalanceSummary = () => {
             </div>
 
             <PayOutsList
-                earningsData={earningsData}
+                earningsData={earningsTransactions}
                 isLoading={isLoading}
                 isFetching={isFetching}
                 isError={isError}

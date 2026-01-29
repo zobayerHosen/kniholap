@@ -31,13 +31,13 @@ const navLinks = [
         end: false,
     },
     {
-        label: "My Purchased Books",
+        label: "Purchases",
         href: "/dashboard/my-purchased-book",
         icon: <LuBookText />,
         end: false,
     },
     {
-        label: "My Sold Books",
+        label: "Sales",
         href: "/dashboard/my-sold-books",
         icon: <FaBookReader />,
         end: false,

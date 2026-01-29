@@ -5,7 +5,7 @@ import globe from "@/public/icons/globe.png";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
-const DEFAULT_LANG = "en";
+const DEFAULT_LANG = "sk";
 
 export default function LanguageSwitch({ className }) {
     const [selectedLanguage, setSelectedLanguage] = useState(DEFAULT_LANG);
@@ -15,37 +15,61 @@ export default function LanguageSwitch({ className }) {
     // Note: Load saved language
     useEffect(() => {
         const saved = localStorage.getItem("selectedLanguage");
+
         if (saved === "en" || saved === "sk") {
             setSelectedLanguage(saved);
+        } else {
+            // 👇 first visit → default Slovak
+            localStorage.setItem("selectedLanguage", "sk");
+
+            const domain = window.location.hostname;
+            document.cookie = `googtrans=/auto/sk; path=/; domain=${domain}`;
+            document.cookie = `googtrans=/auto/sk; path=/`;
+
+            setSelectedLanguage("sk");
         }
     }, []);
+
 
     // Note: Initialize Google
     useEffect(() => {
         if (initialized.current) return;
         initialized.current = true;
 
-        // Note: always define the callback
         window.googleTranslateElementInit = () => {
             if (window.google?.translate) {
-                new window.google.translate.TranslateElement({
-                    pageLanguage: DEFAULT_LANG,
-                    includedLanguages: "en,sk",
-                    layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-                    autoDisplay: false,
-                }, "google_translate_element");
+                new window.google.translate.TranslateElement(
+                    {
+                        pageLanguage: "en",
+                        includedLanguages: "en,sk",
+                        autoDisplay: false,
+                    },
+                    "google_translate_element"
+                );
+
+                // 👇 auto-switch to Slovak
+                const lang = localStorage.getItem("selectedLanguage") || "sk";
+                const selectInterval = setInterval(() => {
+                    const select = document.querySelector(".goog-te-combo");
+                    if (select) {
+                        select.value = lang;
+                        select.dispatchEvent(new Event("change", { bubbles: true }));
+                        clearInterval(selectInterval);
+                    }
+                }, 300);
             }
         };
 
-        // Note: Only add script if not already added
         if (!document.getElementById("google-translate-script")) {
             const script = document.createElement("script");
             script.id = "google-translate-script";
-            script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+            script.src =
+                "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
             script.async = true;
             document.body.appendChild(script);
         }
     }, []);
+
 
     // Note: Super reliable language switch (cookie + DOM trigger)
     const changeLanguage = (lang) => {
