@@ -39,13 +39,13 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
             return response?.data?.data;
         }
     });
-    // console.log("Plan info:--->", planInfo)
+    console.log("Plan info:--->", planInfo?.price)
 
     // Note: Modern Stripe Elements appearance configuration
     const stripeOptions = {
         mode: 'subscription',
-        currency: 'usd',
-        amount: planInfo?.price || 5,  // 
+        currency: 'eur',
+        amount: planInfo?.price * 100,
         paymentMethodCreation: 'manual',
         paymentMethodTypes: ['card'],
         appearance: {

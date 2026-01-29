@@ -67,6 +67,7 @@ const SubscriptionList = () => {
             </div>
 
             <div className="container flex flex-col justify-center items-center gap-8 sm:gap-14 relative z-10">
+                {/* title */}
                 <div className="flex flex-col items-center text-white gap-4 max-w-3xl mx-auto">
                     <SectionTitle
                         text="Choose Your Perfect Plan"
@@ -78,6 +79,7 @@ const SubscriptionList = () => {
                     </p>
                 </div>
 
+                {/* Note: plan list */}
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                     {getPlanListData?.map((plan, index) => {
                         const isPopular = plan?.name?.toLowerCase().includes("premium") ||
@@ -90,7 +92,7 @@ const SubscriptionList = () => {
                                 key={plan?.id}
                             >
                                 {/* Popular Badge */}
-                                {isPopular && ( 
+                                {isPopular && (
                                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
                                         <div className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-6 py-2 rounded-full font-bold text-sm shadow-lg flex items-center gap-2">
                                             <FaFire className="w-4 h-4" />
@@ -108,10 +110,10 @@ const SubscriptionList = () => {
                                     group-hover:shadow-xl transition-all duration-300
                                 `}>
                                     {/* Simple header with section theme */}
-                                    <div className={`p-6 ${getPlanColor(plan?.name)} text-white`}>
-                                        <div className="flex items-center gap-3 mb-4">
+                                    <div className={`p-6 ${getPlanColor(plan?.name || "N/A")} text-white`}>
+                                        <div className="flex items-center gap-3 mb-4 pt-5">
                                             <div className="p-2 bg-white/20 rounded-lg">
-                                                {getPlanIcon(plan?.name)}
+                                                {getPlanIcon(plan?.name || "N/A")}
                                             </div>
                                             <h2 className="text-2xl font-bold capitalize">
                                                 {plan?.name || "N/A"}
@@ -119,23 +121,23 @@ const SubscriptionList = () => {
                                         </div>
 
                                         <div className="flex items-end gap-1">
-                                            <span className="text-4xl font-bold">${plan?.price || "0"}</span>
-                                            <span className="text-white/90 text-lg mb-1">/month</span>
+                                            <span className="text-4xl font-bold">€ {plan?.price || "0"}</span>
+                                            <span className="text-white/90 text-lg mb-1">/{plan?.interval}</span>
                                         </div>
-                                        <p className="text-white/90 text-sm mt-1">Billed monthly</p>
+                                        <p className="text-white/90 text-sm mt-1">Billed {plan?.interval || "N/A"}</p>
                                     </div>
 
                                     {/* Features List */}
                                     <div className="p-6">
-                                        <h3 className={`text-lg font-semibold ${getAccentColor(plan?.name)} mb-4 flex items-center gap-2`}>
+                                        <h3 className={`text-lg font-semibold ${getAccentColor(plan?.name || "N/A")} mb-4 flex items-center gap-2`}>
                                             <FaStar className="w-5 h-5" />
                                             What's Included:
                                         </h3>
                                         <ul className="space-y-3">
                                             {plan?.features?.map((feature, index) => (
                                                 <li key={index} className="flex items-start gap-3">
-                                                    <div className={`mt-1 shrink-0 p-1 ${getAccentColor(plan?.name)}/20 rounded-full`}>
-                                                        <FaCheck className={`w-4 h-4 ${getAccentColor(plan?.name)}`} />
+                                                    <div className={`mt-1 shrink-0 p-1 ${getAccentColor(plan?.name || "N/A")}/20 rounded-full`}>
+                                                        <FaCheck className={`w-4 h-4 ${getAccentColor(plan?.name || "N/A")}`} />
                                                     </div>
                                                     <span className="text-gray-700">
                                                         {feature?.feature || "N/A"}
@@ -172,18 +174,6 @@ const SubscriptionList = () => {
                                                 </>
                                             )}
                                         </CommonBtn>
-
-                                        {/* Additional Info */}
-                                        <div className="mt-4 text-center space-y-1">
-                                            <p className="text-gray-600 text-sm flex items-center justify-center gap-2">
-                                                <FaCheck className="w-4 h-4 text-green-500" />
-                                                14-day free trial
-                                            </p>
-                                            <p className="text-gray-600 text-sm flex items-center justify-center gap-2">
-                                                <FaCheck className="w-4 h-4 text-green-500" />
-                                                Cancel anytime
-                                            </p>
-                                        </div>
                                     </div>
 
                                     {/* Simple corner accent with section theme */}

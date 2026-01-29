@@ -17,7 +17,7 @@ const DashboardReviews = () => {
         queryFn: async () => {
             const response = await axiosInstance.get(`/auth/seller/review/list`);
             return response?.data?.data || [];
-        },
+        }
     });
 
     // Note: handle Next
