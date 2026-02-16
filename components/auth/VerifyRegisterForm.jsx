@@ -67,8 +67,12 @@ const VerifyRegisterForm = () => {
             </h5>
             {/* Otp */}
             <div className="w-full font-medium flex flex-col gap-3 justify-start items-center">
+
+                {/* 
                 <p className="text-red-600 ">***This is for testing purpose only in production this will be removed***</p>
                 <p className="text-red-400  font-semibold">Your Verification Code: {otp}</p>
+                */}
+
                 <Input.OTP
                     length={4}
                     value={otp}

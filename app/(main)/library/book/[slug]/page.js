@@ -62,16 +62,16 @@ const BookDetails = async ({ params }) => {
 
             {/* price */}
             <p className="text-base">
-              Price: $<label className="font-semibold">{book?.price}</label>
+              Price: €<label className="font-semibold">{book?.price || "00"}</label>
             </p>
             {/* shipping cost */}
             <p className="text-base">
               Shipping Cost:{" "}
-              <label className="font-semibold">{book?.shipping_cost}</label>
+              <label className="font-semibold">{book?.shipping_cost || "00"}</label>
             </p>
             {/* isbn */}
             <p className="text-base">
-              ISBN: <label className="font-semibold">{book?.isbn}</label>
+              ISBN: <label className="font-semibold">{book?.isbn || "N/F"}</label>
             </p>
 
             {/* categories */}
@@ -83,7 +83,7 @@ const BookDetails = async ({ params }) => {
                     className="flex justify-center items-center rounded bg-primary text-white font-semibold sm:px-2  py-1 px-2 text-xs xs:text-sm sm:text-base"
                     key={category.id}
                   >
-                    {category?.category?.title}
+                    {category?.category?.title || "Unknown"}
                   </div>
                 ))}
               </div>
