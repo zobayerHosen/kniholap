@@ -28,7 +28,6 @@ const LibraryClient = () => {
                 <YouMayLike />
             </div>
         </>
-    )
-}
-
-export default LibraryClient
+    );
+};
+export default LibraryClient;

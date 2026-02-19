@@ -1,12 +1,15 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
-const Category = ({ setFilters, filters }) => {
+const Category = ({ setFilters }) => {
+
+    const router = useRouter();
+    // const pathname = usePathname();
     const searchParams = useSearchParams();
     const typeQuery = searchParams.get("type");
-    const [selected_type, setSelectedTypes] = useState(typeQuery || "all"); 
+    const [selected_type, setSelectedType] = useState("all");
 
     const types = [
         { id: "all", name: "All" },
@@ -14,29 +17,62 @@ const Category = ({ setFilters, filters }) => {
         { id: "physical", name: "Physical" },
         { id: "premium", name: "Premium" },
     ];
-    // Update filters when selectedCategory changes
+
+    /* Sync state when URL changes */
     useEffect(() => {
-        setFilters((prev) => ({
+
+        if (typeQuery) {
+            setSelectedType(typeQuery);
+        } else {
+            setSelectedType("all");
+        }
+
+    }, [typeQuery]);
+
+
+    /* Update filters when state changes */
+    useEffect(() => {
+        setFilters(prev => ({
             ...prev,
-            type: selected_type === "all" ? null : selected_type,
+            type: selected_type === "all" ? null : selected_type
         }));
+
     }, [selected_type, setFilters]);
-    // main render
+
+    /* Handle click */
+    const handleClick = (type) => {
+        setSelectedType(type);
+
+        if (type === "all") {
+            router.push("/library");
+
+        } else {
+            router.push(`/library?type=${type}`);
+
+        }
+    };
+
+    // Note: ui
     return (
-        <div className='w-full flex justify-center gap-3 sm:gap-6 items-center flex-wrap'>
-            {types.map((type) => (
+        <div className='w-full flex justify-center gap-3 sm:gap-6 flex-wrap'>
+            {types?.map(type => (
                 <button
-                    type="button"
                     key={type.id}
-                    onClick={() => setSelectedTypes(type.id)}
-                    className={`px-4 py-2 rounded md:rounded-xl flex sm:min-w-[100px] md:min-w-[160px] cursor-pointer justify-center border-black/60 items-center text-sm sm:text-base md:text-lg font-semibold 
-                        ${selected_type === type.id ? "bg-primary text-white" : "bg-white text-black"}`}
+                    onClick={() => handleClick(type.id)}
+                    className={`
+                        px-4 py-2 rounded md:rounded-xl
+                        sm:min-w-[100px] md:min-w-[160px]
+                        font-semibold transition
+                        ${selected_type === type.id
+                            ? "bg-primary text-white"
+                            : "bg-white text-black shadow-sm"
+                        }
+                    `}
                 >
-                    {type.name}
+                    {type?.name}
                 </button>
             ))}
         </div>
     );
 };
-
 export default Category;
