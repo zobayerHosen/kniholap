@@ -17,6 +17,7 @@ const BookCard = ({ book = {}, layout }) => {
         id,
         slug,
         author_name,
+        language,
         cover_image,
         title,
         type,
@@ -46,6 +47,7 @@ const BookCard = ({ book = {}, layout }) => {
                 <div className="w-full flex flex-col gap-2 lg:gap-4">
                     <p className="lg:text-3xl text-lg md:text-xl font-medium ">{title} </p>
                     <p><span className="lg:text-xl text-base font-medium">Author:</span> <b className="text-[#A27B5C]">{author_name || "Unknown"}</b></p>
+                    <p><span className="lg:text-xl text-base font-medium">Language:</span> <b className="text-[#A27B5C]">{language || "N/A"}</b></p>
                     <div className="w-full text-xl md:flex-row flex-col-reverse flex items-center justify-start gap-2 lg:gap-5">
                         <StarRating rating={rating} value={rating} className="text-sm self-start" />
                         <p className="font-medium line-clamp-1 self-start md:text-base text-xs sm:text-sm">
@@ -95,6 +97,7 @@ const BookCard = ({ book = {}, layout }) => {
             <div className="w-full flex flex-col gap-1">
                 <p className="sm:text-xl text-lg md:text-2xl font-medium line-clamp-1">{title}</p>
                 <p><span className="md:text-xl text-base sm:text-lg font-medium">Author:</span> {author_name || "Unknown"}</p>
+                <p><span className="lg:text-xl text-base font-medium">Language:</span> <b className="text-[#A27B5C]">{language || "N/A"}</b></p>
                 <div className="w-full text-sm md:text-base flex items-center justify-between gap-1">
                     <StarRating rating={rating} />
                     <span>{Number(rating).toFixed(1)}</span>

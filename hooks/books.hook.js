@@ -20,6 +20,7 @@ const useBooks = ({
           category_ids: filters.category_ids || null,
           type: filters.type || null,
           order_by: orderby,
+          language_id: filters.language_id || null,
         },
       });
       return response?.data?.data || {};

@@ -2,7 +2,7 @@
 
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { loadStripe } from "@stripe/stripe-js";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { FiCreditCard, FiLoader } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Elements } from "@stripe/react-stripe-js";
@@ -14,8 +14,6 @@ import toast from "react-hot-toast";
 const SubscriptionPlanDetails = ({ id: plan_id }) => {
     const { userData, userRefetch } = useUser();
     const isCancelled = userData?.is_cancelled === true;
-    const queryClient = useQueryClient();
-    console.log("User data:--->", userData);
 
     const hasActiveSubscription =
         userData?.is_subscribed &&
@@ -184,7 +182,7 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
                         </p>
 
                         <p className="text-sm text-gray-600 mt-1">
-                            Price: ${userData?.subscription_price} / {planInfo?.interval}
+                            Price: € {userData?.subscription_price} / {planInfo?.interval}
                         </p>
 
                         <p className="text-sm text-green-600 mt-1 capitalize">
@@ -313,7 +311,7 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
 
                                     <div className="mt-4 flex items-end gap-2">
                                         <span className="text-3xl font-bold text-gray-900">
-                                            ${planInfo?.price}
+                                            €{planInfo?.price}
                                         </span>
                                         <span className="text-gray-500 text-sm">
                                             / {planInfo?.interval}

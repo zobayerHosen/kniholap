@@ -9,6 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { useOptions } from "@/hooks/options.hook";
 import toast from "react-hot-toast";
+import useGetLanguageOptions from "@/hooks/language.hook";
 
 const AddNewBookForm = () => {
     const axiosInstance = axiosPrivateClient();
@@ -18,10 +19,18 @@ const AddNewBookForm = () => {
     const [subImagePreviews, setSubImagePreviews] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { categoryList } = useOptions();
+    const { getLanguage } = useGetLanguageOptions();
 
+    // Note: book categories options
     const categoryOptions = categoryList?.map(category => ({
         value: category?.id,
         label: category?.title
+    }));
+
+    // Note: language options id and name convert into value and lable
+    const languageOptions = getLanguage?.map((lang) => ({
+        value: lang?.id,
+        label: lang?.name
     }));
 
     const {
@@ -113,6 +122,7 @@ const AddNewBookForm = () => {
         formData.append('condition', data.condition);
         formData.append('weight_gram', data.weight_gram);
         formData.append('description', data.description);
+        formData.append('language_id', data.language_id);
         formData.append('shipping_cost', data.shipping_cost)
 
         // Note: Append categories as array 
@@ -313,6 +323,21 @@ const AddNewBookForm = () => {
                         innerWrapper="h-[58px]"
                         selectClass="text-black!"
                     />
+                    {/* select book language */}
+                    <CommonInputWrapper
+                        type="select"
+                        label="Book Language"
+                        name="language_id"
+                        register_as="language_id"
+                        control={control}
+                        options={languageOptions || []}
+                        validationRules={{ required: "Book language is required" }}
+                        placeholder="Select Language"
+                        errors={errors}
+                        innerWrapper="h-[58px]"
+                        selectClass="text-black!"
+                    />
+
                     {/* weight input */}
                     <CommonInputWrapper
                         label="Weight (gram)"
@@ -359,7 +384,7 @@ const AddNewBookForm = () => {
                 <button
                     type="submit"
                     disabled={mutation.isPending}
-                    className="w-full bg-[#aa4b29] hover:bg-[#8b3a1a] text-white font-semibold text-xl py-4 rounded-lg transition disabled:opacity-70"
+                    className="cursor-pointer w-full bg-[#aa4b29] hover:bg-[#8b3a1a] text-white font-semibold text-xl py-4 rounded-lg transition disabled:opacity-70"
                 >
                     {mutation.isPending ? 'Publishing Book...' : 'Publish Book'}
                 </button>

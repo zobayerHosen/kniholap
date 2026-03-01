@@ -22,6 +22,7 @@ export default function UserProvider({ children, serverUserData = null, serverAc
         enabled: !!accessToken,
         initialData: serverUserData,
     });
+    console.log("User data", userData);
     // isLoggedIn and userRole
     const isLoggedIn = !!userData && !!accessToken;
     // is quiz answered

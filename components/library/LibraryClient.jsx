@@ -12,7 +12,8 @@ const LibraryClient = () => {
     const [filters, setFilters] = useState({
         search: null,
         type: null,
-        category_ids: null
+        category_ids: null,
+        language_id: null,
     });
     // main layout
     return (
