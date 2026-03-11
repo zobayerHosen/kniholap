@@ -126,6 +126,7 @@ const CheckoutForm = () => {
             // Note: Create payment intent
             const paymentIntentData = await createPaymentIntent.mutateAsync();
             const clientSecret = paymentIntentData?.client_secret;
+            // console.log("Client secret", clientSecret);
             if (!clientSecret) {
                 throw new Error("Payment authorization failed");
             }
@@ -154,6 +155,7 @@ const CheckoutForm = () => {
                 // Note: Manual navigation to success page with state  // payment success page 
                 router.push("/payment-success");
             }
+            console.log("Setup intent", setupIntent)
         } catch (err) {
             setError(err.response?.data?.message || "Payment processing failed");
             console.error("Payment error:", err);
@@ -161,6 +163,7 @@ const CheckoutForm = () => {
             setIsProcessing(false);
             setShowCancelButton(true);
         }
+        console.log("Handle subscription", handleSubscription)
     };
 
     // Note: main component

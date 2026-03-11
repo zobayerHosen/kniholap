@@ -3,7 +3,7 @@
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { loadStripe } from "@stripe/stripe-js";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { FiCreditCard, FiLoader } from "react-icons/fi";
+import { FiAlertCircle, FiCreditCard, FiLoader } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";

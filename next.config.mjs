@@ -28,6 +28,16 @@ const nextConfig = {
               // Or be more strict:
               // pathname: "/uploads/**",
             },
+            {
+              protocol: "https",
+              // hostname: new URL(process.env.NEXT_PUBLIC_BASE_URL).hostname,
+              // hostname: "marikbtv.reigeeky.com",
+              hostname: "marikbtv.thewarriors.team",
+              port: "",
+              pathname: "/**", // Allow all paths under your base URL
+              // Or be more strict:
+              // pathname: "/uploads/**",
+            },
           ]
         : []),
     ],
