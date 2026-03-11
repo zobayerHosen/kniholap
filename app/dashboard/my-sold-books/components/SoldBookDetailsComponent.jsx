@@ -317,7 +317,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
 
                         <div className="text-sm text-gray-700 pt-2 space-y-1">
                             <p>Book Type: <span className="font-medium">{type}</span></p>
-                            <p>Book Price: <span className="font-medium">${price}</span></p>
+                            <p>Book Price: <span className="font-medium">€{price}</span></p>
                             <p>Order ID: <span className="font-medium">{order_number}</span></p>
                             <p>Paid At: <span className="font-medium">{paid_at}</span></p>
                         </div>
@@ -335,19 +335,19 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
 
                     <div className="grid grid-cols-2 gap-y-3 text-sm">
                         <p className="text-gray-600">Book Price</p>
-                        <p className="text-right font-medium">${book_price}</p>
+                        <p className="text-right font-medium">€{book_price}</p>
 
                         <p className="text-gray-600">Shipping Cost</p>
-                        <p className="text-right font-medium">${shipping_cost}</p>
+                        <p className="text-right font-medium">€{shipping_cost}</p>
 
                         <p className="text-gray-600">Platform Fee</p>
-                        <p className="text-right font-medium">${platform_fee}</p>
+                        <p className="text-right font-medium">€{platform_fee}</p>
 
                         <div className="col-span-2 border-t my-2" />
 
                         <p className="text-gray-900 font-semibold">Total Amount</p>
                         <p className="text-right font-semibold text-gray-900">
-                            ${total_amount}
+                            €{total_amount}
                         </p>
                     </div>
                 </div>

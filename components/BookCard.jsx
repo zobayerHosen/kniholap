@@ -28,6 +28,7 @@ const BookCard = ({ book = {}, layout }) => {
         total_sales,
         rating
     } = book || {}
+    console.log("Book card", language)
 
     const [imgSrc, setImgSrc] = useState(cover_image || dummyImage);
     const [isBookmarked, setIsBookmarked] = useState(is_bookmarked);

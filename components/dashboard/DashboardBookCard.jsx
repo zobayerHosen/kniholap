@@ -48,7 +48,7 @@ const DashboardBookCard = ({ book, type = null }) => {
                 <div className="flex items-center justify-between text-sm">
                     <div className="space-y-1">
                         <div className="text-gray-600">
-                            Sold Price: <span className="font-semibold text-gray-900">${price}</span>
+                            Sold Price: <span className="font-semibold text-gray-900">€{price}</span>
                         </div>
                         {soldDate && (
                             <div className="text-gray-600 text-xs">

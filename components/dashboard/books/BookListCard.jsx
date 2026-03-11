@@ -69,8 +69,8 @@ const BookListCard = ({ book }) => {
     const parsedCategoryIds = category_ids ? JSON.parse(category_ids) : [];
 
     // Format price with currency
-    const formattedPrice = price ? `$${parseFloat(price).toFixed(2)}` : 'Free';
-    const formattedDiscountPrice = discount_price ? `$${parseFloat(discount_price).toFixed(2)}` : null;
+    const formattedPrice = price ? `€${parseFloat(price).toFixed(2)}` : 'Free';
+    const formattedDiscountPrice = discount_price ? `€${parseFloat(discount_price).toFixed(2)}` : null;
 
     // Format date
     const formatDate = (dateString) => {
@@ -164,7 +164,7 @@ const BookListCard = ({ book }) => {
                                     {formattedPrice}
                                 </span>
                                 <span className="text-sm bg-red-100 text-red-600 px-2 py-1 rounded">
-                                    Save ${(parseFloat(price) - parseFloat(discount_price)).toFixed(2)}
+                                    Save €{(parseFloat(price) - parseFloat(discount_price)).toFixed(2)}
                                 </span>
                             </>
                         ) : (

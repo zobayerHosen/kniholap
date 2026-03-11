@@ -4,9 +4,12 @@ import CommonBtn from "../common/CommonBtn"
 import SectionTitle from "../common/SectionTitle"
 import { axiosPrivateClient } from "@/lib/axios.private.client";
 import { FaCrown, FaBookOpen, FaRocket, FaCheck, FaStar, FaFire, FaGem, FaSeedling } from "react-icons/fa";
+import { useUser } from "@/hooks/get-user.hook";
 
 const SubscriptionList = () => {
     const axiosInstance = axiosPrivateClient();
+    const { userData } = useUser()
+    const planId = userData?.subscription_plan_id;
 
     // Note: get Subscription plans list
     const { data: getPlanListData } = useQuery({
