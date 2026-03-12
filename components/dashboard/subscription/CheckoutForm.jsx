@@ -25,7 +25,6 @@ const CheckoutForm = () => {
 
     // Note: Destructure user data
     // const { is_subscribed } = userData;
-    console.log("User data:---->", userData);
 
     // Note: Handle payment element ready state
     useEffect(() => {
@@ -125,8 +124,9 @@ const CheckoutForm = () => {
             }
             // Note: Create payment intent
             const paymentIntentData = await createPaymentIntent.mutateAsync();
+            console.log("Payment intent", paymentIntentData);
             const clientSecret = paymentIntentData?.client_secret;
-            // console.log("Client secret", clientSecret);
+            console.log("Client secret", clientSecret);
             if (!clientSecret) {
                 throw new Error("Payment authorization failed");
             }
@@ -150,7 +150,7 @@ const CheckoutForm = () => {
                 await handleSubscription.mutateAsync({
                     payment_method: setupIntent.payment_method,
                     plan_id: id,
-                    isUpdating: false, // give  "is_subscribed" if you want to go throw the check page when switching plan current backend handles it so it false 
+                    isUpdating: false,
                 });
                 // Note: Manual navigation to success page with state  // payment success page 
                 router.push("/payment-success");
