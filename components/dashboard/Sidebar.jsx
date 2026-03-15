@@ -49,8 +49,14 @@ const navLinks = [
         end: true,
     },
     {
-        label: "Settings",
+        label: "Profile Settings",
         href: "/dashboard/settings",
+        icon: <IoSettingsOutline />,
+        end: true,
+    },
+    {
+        label: "Account Settings",
+        href: "/dashboard/stripe-settings",
         icon: <IoSettingsOutline />,
         end: true,
     },

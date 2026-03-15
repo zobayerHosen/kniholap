@@ -1,40 +1,40 @@
 "use client";
 import CommonDashboardTitle from "@/components/common/CommonDashboardTitle";
 import { axiosPrivateClient } from "@/lib/axios.private.client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 
 const EarningsTitle = () => {
-    const axiosInstance = axiosPrivateClient();
+    // const axiosInstance = axiosPrivateClient();
 
     // Note: connect account api
-    const connectAccountMutation = useMutation({
-        mutationKey: ["connect-account"],
-        mutationFn: async () => {
-            const response = await axiosInstance.post(
-                "/auth/account/user/onboarding"
-            );
-            return response?.data;
-        },
-        onSuccess: (data) => {
-            const url = data?.data?.url;
+    // const connectAccountMutation = useMutation({
+    //     mutationKey: ["connect-account"],
+    //     mutationFn: async () => {
+    //         const response = await axiosInstance.post(
+    //             "/auth/account/user/onboarding"
+    //         );
+    //         return response?.data;
+    //     },
+    //     onSuccess: (data) => {
+    //         const url = data?.data?.url;
 
-            if (url) {
-                window.location.href = url;
-            }
-        },
-    });
+    //         if (url) {
+    //             window.location.href = url;
+    //         }
+    //     },
+    // });
 
     // Note: check is connected
-    const { data: checkConnect, isLoading: checkingConnect } = useQuery({
-        queryKey: ["check-connect-account"],
-        queryFn: async () => {
-            const response = await axiosInstance.get(
-                "/auth/account/connect/check"
-            );
-            return response?.data?.data;
-        },
-    });
-    const isConnected = checkConnect?.is_connect === true
+    // const { data: checkConnect, isLoading: checkingConnect } = useQuery({
+    //     queryKey: ["check-connect-account"],
+    //     queryFn: async () => {
+    //         const response = await axiosInstance.get(
+    //             "/auth/account/connect/check"
+    //         );
+    //         return response?.data?.data;
+    //     },
+    // });
+    // const isConnected = checkConnect?.is_connect === true
 
     // Note: main ui component
     return (
@@ -46,7 +46,7 @@ const EarningsTitle = () => {
 
             <div className="flex items-center gap-4">
                 {/* connect account button */}
-                <button
+                {/* <button
                     onClick={() => connectAccountMutation.mutate()}
                     disabled={connectAccountMutation.isPending}
                     className={`cursor-pointer flex items-center gap-2 p-3 rounded-full transition-all duration-300 ease-in-out w-full sm:w-auto justify-center ${connectAccountMutation.isPending
@@ -61,7 +61,14 @@ const EarningsTitle = () => {
                         : isConnected
                             ? "Check your balance"
                             : "Connect Account"}
-                </button>
+                </button> */}
+
+                <Link
+                    href="/dashboard/stripe-settings"
+                    className="p-3 rounded-full bg-[#7C2709] transition-all duration-300 ease-in-out w-full sm:w-auto text-white hover:bg-white hover:text-black hover:scale-105 hover:shadow-md"
+                >
+                    Connect Account
+                </Link>
 
 
                 {/* right side */}

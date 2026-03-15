@@ -96,6 +96,35 @@ const PersonalInfrmationForm = () => {
                     />
                 </div>
 
+                {/* Date of Birth  */}
+                <CommonInputWrapper
+                    register={register}
+                    errors={errors}
+                    type="date"
+                    name="date_of_birth"
+                    placeholder="Date of Birth"
+                    register_as="date_of_birth"
+                    value={userData?.date_of_birth}
+                    label="Date of Birth:"
+                    validationRules={{
+                        required: "This field is required",
+                    }}
+                />
+                {/* phone number */}
+                <CommonInputWrapper
+                    register={register}
+                    errors={errors}
+                    type="text"
+                    name="phone_number"
+                    placeholder="Phone number"
+                    register_as="phone_number"
+                    value={userData?.phone_number}
+                    label="Phone Number:"
+                    validationRules={{
+                        required: "This field is required",
+                    }}
+                />
+
                 {/* house, Road, and city */}
                 <div className="md:col-span-2">
                     <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
