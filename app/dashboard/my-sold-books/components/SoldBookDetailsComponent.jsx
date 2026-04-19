@@ -11,11 +11,11 @@ import EmptyScreen from "../../chat-book-seller/components/EmptyScreen";
 import { useUser } from "@/hooks/get-user.hook";
 import { useSearchParams } from "next/navigation";
 import ErrorScreen from "@/components/common/ErrorScreen";
-import echo from "@/lib/echo";
 import SoldBookDetailsSkeleton from "@/components/dashboard/SoldBookDetailsSkeleton";
 import { v4 as uuidv4 } from "uuid";
 import useUpdateShippingOrder from "@/hooks/update-shipping.hook";
 import toast from "react-hot-toast";
+import echo from "@/lib/echo";
 
 const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     const searchParams = useSearchParams();
@@ -92,7 +92,7 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     });
     // Note: Update shipping address
     const updateShipping = useUpdateShippingOrder({ refetchOrder: soldBookRefetch, refetchChat: refetch });
-    console.log("Room Data : ----->", roomData);
+    // console.log("Room Data : ----->", roomData);
 
     // Note: Function to scroll to the bottom of the messages
     const scrollToBottom = useCallback(() => {
@@ -423,9 +423,9 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
                             <div className="w-full border border-t-0 border-slate-300 mb-2 h-full p-2 md:p-4 overflow-y-auto">
                                 {/* Animate message appearance/disappearance */}
                                 <AnimatePresence>
-                                    {messages?.map((message) => (
+                                    {messages?.map((message, idx) => (
                                         <Message
-                                            key={message.id}
+                                            key={idx}
                                             message={message}
                                             isCurrentUser={message.sender_id === userData?.id}
                                             isTemp={message.isTemp}
@@ -447,7 +447,6 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
                     </div>
                 )
             }
-
         </div>
     );
 };

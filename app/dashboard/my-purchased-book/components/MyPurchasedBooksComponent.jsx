@@ -400,9 +400,9 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
                             <div className="w-full border border-t-0 border-slate-300 mb-2 h-full p-2 md:p-4 overflow-y-auto">
                                 {/* Animate message appearance/disappearance */}
                                 <AnimatePresence>
-                                    {messages?.map((message) => (
+                                    {messages?.map((message, idx) => (
                                         <Message
-                                            key={message.id}
+                                            key={idx}
                                             message={message}
                                             isCurrentUser={message.sender_id === userData?.id}
                                             isTemp={message.isTemp}
