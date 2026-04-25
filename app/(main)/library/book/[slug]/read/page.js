@@ -23,7 +23,6 @@ export default async function BookDetailsPage({ params }) {
     const axiosInstance = await axiosPrivateServer();
     const response = await axiosInstance.get(`/book/details/${slug}`);
     book = response?.data?.data;
-    console.log(book);
     if (!book) throw new Error("Book not found");
   } catch (err) {
     console.error("Failed to fetch book:", err);

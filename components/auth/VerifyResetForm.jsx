@@ -15,14 +15,14 @@ const VerifyResetForm = () => {
     // for checking email in session storage
     useEffect(() => {
         const RESET_EMAIL_KEY = process.env.NEXT_PUBLIC_RESET_EMAIL_KEY || "resetEmail";
-        const RESET_OTP_KEY = process.env.NEXT_PUBLIC_RESET_OTP_KEY || "resetOtp";
-        const storedOtp = sessionStorage.getItem(RESET_OTP_KEY);
+        // const RESET_OTP_KEY = process.env.NEXT_PUBLIC_RESET_OTP_KEY || "resetOtp";
+        // const storedOtp = sessionStorage.getItem(RESET_OTP_KEY);
         const verifyEmail = sessionStorage.getItem(RESET_EMAIL_KEY);
         if (!verifyEmail) {
             router.push("/auth/signup");
             return;
         }
-        setOtp(storedOtp);
+        // setOtp(storedOtp);
         setEmail(verifyEmail);
     }, [router]);
     // otp change handler

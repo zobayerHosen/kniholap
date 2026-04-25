@@ -6,7 +6,6 @@ import AuthRequiredModal from "@/components/common/AuthRequiredModal";
 
 const PdfDownload = ({ book }) => {
     const { userData } = useUser();
-    console.log("User data: ---> ", userData)
     const [showRequiredModal, setShowRequiredModal] = useState(false);
 
     const isAllowed =
