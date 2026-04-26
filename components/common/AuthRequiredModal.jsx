@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-const AuthRequiredModal = ({ isOpen, onClose, text = "", buttonText = "" }) => {
+const AuthRequiredModal = ({ isOpen, onClose, text = "", buttonText = "", routeName = "/" }) => {
     const router = useRouter();
 
     return (
@@ -40,7 +40,7 @@ const AuthRequiredModal = ({ isOpen, onClose, text = "", buttonText = "" }) => {
                             </button>
 
                             <button
-                                onClick={() => router.push("/auth")}
+                                onClick={() => router.push(routeName)}
                                 className="cursor-pointer px-4 py-2 rounded-md bg-[#A5340C] text-white hover:bg-[#8f2d0b]"
                             >
                                 {buttonText}

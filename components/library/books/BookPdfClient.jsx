@@ -19,9 +19,9 @@ const BookPdfClient = ({ book = {} }) => {
     const isSubscribed = userData?.subscription_status;
 
     // If not subscribed, show subscription gate
-    if (!isSubscribed) {
-        return <SubscriptionGate />;
-    }
+    // if (!isSubscribed) {
+    //     return <SubscriptionGate />;
+    // }
 
     // If subscribed, show PDF viewer
     return (

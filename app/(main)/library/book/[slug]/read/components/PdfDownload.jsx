@@ -46,6 +46,7 @@ const PdfDownload = ({ book }) => {
                 onClose={() => setShowRequiredModal(false)}
                 text="You need to get a subscription first to download this book."
                 buttonText="Subscription please.."
+                routeName="/"
             />
         </>
     );
