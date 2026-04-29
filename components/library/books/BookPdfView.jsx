@@ -28,7 +28,7 @@ const COLORS = [
 function SelectionTip({ onHighlight, onNote, onClose }) {
     return (
         <div
-            className="flex items-center gap-1 bg-gray-900 text-white rounded-xl shadow-2xl px-2 py-1.5animate-fade-in select-none z-50"
+            className="flex items-center gap-1 bg-gray-900 text-white rounded-xl shadow-2xl px-2 py-1.5 animate-fade-in select-none z-50"
             style={{ fontSize: 13 }}
         >
             {/* Colour swatches */}

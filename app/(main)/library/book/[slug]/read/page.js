@@ -54,7 +54,7 @@ export default async function BookDetailsPage({ params }) {
             <div className="w-full flex justify-start md:flex-row flex-col md:items-center gap-2 md:gap-4">
               <p className="lg:text-xl text-base shrink-0">
                 Author:{" "}
-     q           <span className="text-[#A27B5C]">
+                <span className="text-[#A27B5C]">
                   {book?.author || "Unknown"}
                 </span>
               </p>
