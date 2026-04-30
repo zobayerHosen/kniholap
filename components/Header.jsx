@@ -34,6 +34,9 @@ const Header = () => {
                         {/* search */}
                         {/* <GlobalSearch className={`sm:flex hidden`} /> */}
                         {/* sign in */}
+                        <Link href="/download-app" title="Get App" className="sm:flex hidden items-center justify-center gap-2 text-base font-secondary font-medium text-primary border border-primary px-4 py-2 rounded-3xl hover:bg-primary hover:text-white transition-all">
+                            Get App
+                        </Link>
                         {
                             !accessToken ? (
                                 <Link href="/auth" prefetch={true} title="Sign In" className="sm:p-2.5 w-10 min-h-10 bg-primary sm:w-28  items-center justify-center gap-2 text-base font-secondary font-medium text-white rounded-lg xl:rounded-3xl capitalize sm:flex hidden">

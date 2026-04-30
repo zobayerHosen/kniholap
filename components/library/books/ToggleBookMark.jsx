@@ -4,10 +4,8 @@ import { useState } from "react";
 import { FaBookmark } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa";
 const ToggleBookMark = ({ book = {} }) => {
-    console.log("Read Book:---->", book);
     const { handleBookMarksMutation } = useBookMarks();
     const [isBookmark, setIsBookmark] = useState(book.is_bookmarked);
-    console.log(isBookmark)
 
     const handleBookMark = () => {
         handleBookMarksMutation.mutate({ book_id: book.id });

@@ -37,7 +37,6 @@ const SubscriptionPlanDetails = ({ id: plan_id }) => {
             return response?.data?.data;
         }
     });
-    console.log("Plan info:--->", planInfo?.price)
 
     // Note: Modern Stripe Elements appearance configuration
     const stripeOptions = {

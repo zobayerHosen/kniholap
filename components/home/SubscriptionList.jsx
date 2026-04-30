@@ -19,7 +19,6 @@ const SubscriptionList = () => {
             return response?.data?.data || [];
         },
     });
-    // console.log("Get plans List Data:--->", getPlanListData);
 
     // Helper function to get icon based on plan name
     const getPlanIcon = (planName) => {

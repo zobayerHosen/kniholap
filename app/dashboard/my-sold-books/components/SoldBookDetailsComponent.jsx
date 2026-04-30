@@ -92,7 +92,6 @@ const SoldBookDetailsComponent = ({ params_id, showChat }) => {
     });
     // Note: Update shipping address
     const updateShipping = useUpdateShippingOrder({ refetchOrder: soldBookRefetch, refetchChat: refetch });
-    // console.log("Room Data : ----->", roomData);
 
     // Note: Function to scroll to the bottom of the messages
     const scrollToBottom = useCallback(() => {

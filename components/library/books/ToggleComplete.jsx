@@ -25,7 +25,6 @@ const ToggleComplete = ({ book = {} }) => {
         },
         onError: (error) => {
             toast.error("Failed to update book status");
-            console.log(error);
         }
     });
 
