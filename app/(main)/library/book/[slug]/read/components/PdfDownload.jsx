@@ -6,7 +6,6 @@ import AuthRequiredModal from "@/components/common/AuthRequiredModal";
 
 const PdfDownload = ({ book }) => {
     const { userData } = useUser();
-    console.log("User data: ---> ", userData)
     const [showRequiredModal, setShowRequiredModal] = useState(false);
 
     const isAllowed =
@@ -47,6 +46,7 @@ const PdfDownload = ({ book }) => {
                 onClose={() => setShowRequiredModal(false)}
                 text="You need to get a subscription first to download this book."
                 buttonText="Subscription please.."
+                routeName="/"
             />
         </>
     );

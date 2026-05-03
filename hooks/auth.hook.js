@@ -65,14 +65,12 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       toast.success(data?.message || "Otp sent successfully");
-      console.log("Registration data ---->", data);
       sessionStorage.setItem(VERIFY_EMAIL_KEY, data?.data?.email);
       // comment this code in production
       sessionStorage.setItem(VERIFY_OTP_KEY, data?.data?.otp);
       router.push("/auth/signup/verify_otp");
     },
     onError: (error) => {
-      console.log("Registration error response ---->", error.response);
       toast.error(error.response?.data?.message || "Registration failed");
     },
   });
@@ -85,7 +83,6 @@ export const useAuth = () => {
     },
     onSuccess: (data) => {
       toast.success(data?.message || "Logged in successfully");
-      console.log(data?.data);
       // get necessary data from response
       const token = data?.data?.token;
       // pass data to onLogin function
@@ -93,7 +90,6 @@ export const useAuth = () => {
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || "Login failed");
-      console.log("Login error response ---->", error.response);
     },
   });
   // ------------------- // Google login mutation // -------------------
@@ -137,10 +133,8 @@ export const useAuth = () => {
       sessionStorage.removeItem(VERIFY_OTP_KEY);
       toast.success(data?.message || "User Verified successfully");
       sessionStorage.removeItem(VERIFY_EMAIL_KEY);
-      console.log("Verification otp response --->", data?.data?.token);
     },
     onError: (error) => {
-      console.log("Verification otp error response ---->", error.response);
       toast.error(error.response?.data?.message || "OTP verification failed");
     },
   });
@@ -152,7 +146,6 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (res) => {
-      console.log("Resend otp response --->", res);
       toast.success(res?.message || "OTP resent successfully");
       sessionStorage.setItem(VERIFY_OTP_KEY, res?.data?.otp);
     },
@@ -205,7 +198,6 @@ export const useAuth = () => {
       return response.data;
     },
     onSuccess: (res) => {
-      console.log("Resend reset otp response --->", res);
       toast.success(res?.message || "OTP resent successfully");
       sessionStorage.setItem(RESET_OTP_KEY, res?.data?.otp);
     },

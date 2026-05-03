@@ -68,9 +68,9 @@ const RecentOrdersCard = ({ item = {}, layout }) => {
                     <CommonBtn
                         className={`rounded-full !min-h-auto !h-[48px]`}
                         link={true}
-                        path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${item?.slug}`}`}
+                        path={type === 'ebook' ? "/download-app" : `/library/book/${item?.slug}`}
                     >
-                        {type === 'ebook' ? 'Continue reading' : 'Buy Now'}
+                        {type === 'ebook' ? 'Read on App' : 'Buy Now'}
                     </CommonBtn>
                 </div>
             </div>
@@ -102,9 +102,9 @@ const RecentOrdersCard = ({ item = {}, layout }) => {
             <CommonBtn
                 className={`rounded-full !min-h-auto !h-[48px] ${is_already_purchase && "bg-blue-400"}`}
                 link={true}
-                path={`${type === 'ebook' ? `/library/book/${slug}/read` : `/library/book/${item?.slug}`}`}
+                path={type === 'ebook' && is_already_purchase ? "/download-app" : `/library/book/${item?.slug}`}
             >
-                {type === 'ebook' ? 'Continue reading' : is_already_purchase ? "Already Purchased" : "View more"}
+                {type === 'ebook' && is_already_purchase ? 'Read on App' : is_already_purchase ? "Already Purchased" : "View more"}
             </CommonBtn>
         </div>
     );

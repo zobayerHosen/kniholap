@@ -31,7 +31,6 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
         },
         enabled: !!params_id
     });
-    console.log("Sold book details data: --->", getSoldBookDetails);
 
     // Note: destructure all properties
     const {
@@ -84,7 +83,6 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
         },
         enabled: !!room_id,
     });
-    console.log("Room Data : ----->", roomData);
 
     // Note: Function to scroll to the bottom of the messages
     const scrollToBottom = useCallback(() => {
@@ -185,7 +183,6 @@ const MyPurchasedBooksComponent = ({ params_id, showChat }) => {
             refetchOrderDetais()
         },
         onError: (error) => {
-            console.log("Error", error)
             toast.error("Something went wrong!")
         }
     });

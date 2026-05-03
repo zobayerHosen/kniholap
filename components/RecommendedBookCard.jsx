@@ -105,8 +105,8 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                             </div>
                             {
                                 type === "ebook" ? (
-                                    <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/library/book/${book?.slug}/read`}>
-                                        Read Now
+                                    <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path="/download-app">
+                                        Read on App
                                     </CommonBtn>
                                 ) : (
                                     <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/library/book/${book?.slug}`}>
@@ -171,8 +171,8 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                             </div>
                             {
                                 type === "ebook" ? (
-                                    <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/library/book/${book?.slug}/read`}>
-                                        Read Now
+                                    <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path="/download-app">
+                                        Read on App
                                     </CommonBtn>
                                 ) : (
                                     <CommonBtn className={`rounded-full bg-black text-white capitalize`} link={true} path={`/library/book/${book?.slug}`}>
@@ -189,6 +189,7 @@ const RecommendedBookCard = ({ book = {}, isFirstBook = false }) => {
                 onClose={() => setShowAuthModal(false)}
                 text="You need to sign in first to bookmark this book."
                 buttonText="Go to Sign In"
+                routeName="/auth"
             />
         </>
     )

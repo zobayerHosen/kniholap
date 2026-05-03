@@ -15,9 +15,9 @@ const VerifyRegisterForm = () => {
     // for checking email in session storage
     useEffect(() => {
         const VERIFY_EMAIL_KEY = process.env.NEXT_PUBLIC_VERIFY_EMAIL_KEY || "verifyEmail";
-        const VERIFY_OTP_KEY = process.env.NEXT_PUBLIC_VERIFY_OTP_KEY || "verifyOtp";
+        // const VERIFY_OTP_KEY = process.env.NEXT_PUBLIC_VERIFY_OTP_KEY || "verifyOtp";
 
-        const storedOtp = sessionStorage.getItem(VERIFY_OTP_KEY);
+        // const storedOtp = sessionStorage.getItem(VERIFY_OTP_KEY);
         const verifyEmail = sessionStorage.getItem(VERIFY_EMAIL_KEY);
 
         if (!verifyEmail) {
@@ -25,7 +25,7 @@ const VerifyRegisterForm = () => {
             return;
         }
 
-        setOtp(storedOtp);
+        // setOtp(storedOtp);
         setEmail(verifyEmail);
     }, [router]);
     // otp change handler

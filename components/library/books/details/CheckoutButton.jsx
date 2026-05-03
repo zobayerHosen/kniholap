@@ -30,10 +30,10 @@ const CheckoutButton = ({ book }) => {
             {book?.type === "ebook" ? (
                 <CommonBtn
                     link={true}
-                    path={`/library/book/${book?.slug}/read`}
+                    path="/download-app"
                     className="rounded-full hover:opacity-90 hover:bg-secondary transition-colors duration-300 hover:text-white"
                 >
-                    Read Now
+                    Read on App
                 </CommonBtn>
             ) : (
                 <CommonBtn

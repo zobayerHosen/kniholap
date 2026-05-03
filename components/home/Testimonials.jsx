@@ -61,7 +61,6 @@ const Testimonials = () => {
             return response?.data?.data || [];
         }
     });
-    // console.log("testimonila data", testimonialsData);
 
     // Note: main render
     return (

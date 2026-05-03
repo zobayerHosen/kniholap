@@ -1,3 +1,4 @@
+import SeeAllReviewsButton from "@/components/library/books/details/SeeAllReviewsButton";
 import StarRating from "@/components/common/StarRating";
 import BookImages from "@/components/library/books/BookImages";
 import RelatedBooks from "@/components/library/books/RelatedBooks";
@@ -18,13 +19,11 @@ const BookDetails = async ({ params }) => {
     const axiosInstance = await axiosPrivateServer();
     const response = await axiosInstance.get(`/book/details/${slug}`);
     book = response?.data?.data;
-    console.log(book);
     if (!book) throw new Error("Book not found");
   } catch (err) {
     console.error("Failed to fetch book:", err);
     notFound();
   }
-  console.log("Main Book Details Data:---->", book);
 
   // Note: main render
   return (
@@ -54,6 +53,7 @@ const BookDetails = async ({ params }) => {
                 {book?.total_rating_avg || 0} ({book?.no_of_reviews || 0}{" "}
                 reviews)
               </span>
+              <SeeAllReviewsButton slug={slug} reviewCount={book?.no_of_reviews} />
             </div>
             <GiveReview
               book={book}
