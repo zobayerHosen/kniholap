@@ -74,7 +74,6 @@ const PersonalInfrmationForm = () => {
                         required: "This field is required",
                     }}
                 />
-
                 {/* email */}
                 <div className="md:col-span-2">
                     <CommonInputWrapper
@@ -86,6 +85,7 @@ const PersonalInfrmationForm = () => {
                         register_as="email"
                         label="Email address:"
                         value={userData?.email}
+                        readOnly
                         validationRules={{
                             required: "Email field is required",
                             pattern: {
@@ -95,7 +95,6 @@ const PersonalInfrmationForm = () => {
                         }}
                     />
                 </div>
-
                 {/* Date of Birth  */}
                 <CommonInputWrapper
                     register={register}

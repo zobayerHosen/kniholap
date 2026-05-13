@@ -39,8 +39,8 @@ const SettingsContent = () => {
             userRefetch();
         },
 
-        onError: () => {
-            toast.error("Image update failed");
+        onError: (error) => {
+            toast.error(error?.response?.data?.data?.cover[1], "Image update failed");
             setAvatarPreview(null);
             setCoverPreview(null);
         }
@@ -90,6 +90,7 @@ const SettingsContent = () => {
                         name="cover"
                         className="hidden"
                         disabled={isPending}
+                        accept="image/*"
                     />
                 </label>
 
@@ -122,30 +123,7 @@ const SettingsContent = () => {
             <div className="mt-20 sm:mt-24 md:mt-28 lg:mt-30 md:px-8 lg:px-12">
                 {/* user card info and payment methods details */}
                 <UserInfo />
-
-                {/* Settings Buttons */}
-                {/* <div className="mt-6 sm:mt-8 md:mt-10 space-y-3 sm:space-y-4">
-                    <div className="cursor-pointer w-full flex justify-between items-center bg-white border border-gray-200 rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-5 py-3 sm:py-4 text-gray-700 font-medium shadow-sm hover:bg-gray-50 transition">
-                        <p className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg">
-                            <MdNotificationsActive className="text-xl sm:text-2xl" />
-                            Notifications
-                        </p>
-                        <Switch
-                            className="custom-switch scale-75 sm:scale-90 md:scale-100"
-                        />
-                    </div>
-
-                    <button className="cursor-pointer w-full flex justify-between items-center bg-white border border-gray-200 rounded-xl sm:rounded-2xl px-3 sm:px-4 md:px-5 py-3 sm:py-4 text-gray-700 font-medium shadow-sm hover:bg-gray-50 transition">
-                        <p className="flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg">
-                            <LiaLanguageSolid className="text-xl sm:text-2xl" />
-                            Change Language
-                        </p>
-
-                        <TbExchange className="text-xl sm:text-2xl" />
-                    </button>
-                </div> */}
             </div>
-
             <PersonalInformation />
         </div>
     );
