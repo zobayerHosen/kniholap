@@ -271,6 +271,7 @@ export const useAuth = () => {
     verifyResetOtp,
     resetNewPassword,
     logout,
+    onLogin,
     onLogout,
     setAuthCookie,
   };
