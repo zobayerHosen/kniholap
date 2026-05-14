@@ -56,13 +56,13 @@ const DashboardHeader = () => {
             {/* Right-side area (optional icons, profile, etc.) */}
             <div className="flex items-center gap-3 lg:gap-6 order-1 sm:order-2 w-full sm:w-auto justify-between xs:justify-normal">
                 {/* notifications icon */}
-                <button
+                {/* <button
                     className="cursor-pointer flex items-center justify-center bg-white rounded-full p-2 hover:bg-gray-100 hover:scale-105 transition-all duration-300 ease-in-out"
                 >
                     <MdOutlineNotificationsActive
                         className="md:size-6 size-5 text-[#F84E12]"
                     />
-                </button>
+                </button> */}
 
                 {/* user avatar */}
                 <div className="md:size-10 size-9 rounded-full cursor-pointer">

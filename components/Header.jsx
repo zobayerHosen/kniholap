@@ -4,7 +4,6 @@ import NavItems from "./NavItems"
 import Link from "next/link"
 import LanguageSwitch from "./LanguageSwitch"
 import Notifications from "./Notifications";
-import GlobalSearch from "./GlobalSearch";
 import MobileNavItems from "./MobileNavItems";
 import { useUser } from "@/hooks/get-user.hook"
 import { PiSignOut } from "react-icons/pi";
@@ -16,7 +15,6 @@ const Header = () => {
     const { accessToken } = useUser();
     const { logout } = useAuth();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
-
 
     // main render
     return (
@@ -30,7 +28,7 @@ const Header = () => {
                         {/* language switch */}
                         <LanguageSwitch className={`sm:flex hidden`} />
                         {/* Notifications */}
-                        <Notifications className={`sm:flex hidden`} />
+                        {/* <Notifications className={`sm:flex hidden`} /> */}
                         {/* search */}
                         {/* <GlobalSearch className={`sm:flex hidden`} /> */}
                         {/* sign in */}
