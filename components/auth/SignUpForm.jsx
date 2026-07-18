@@ -7,15 +7,6 @@ import { useState } from "react";
 import CommonBtn from "../common/CommonBtn";
 import ErrorText from "../common/ErrorText";
 
-/**
- * SignUpForm
- * 
- * A form component for signing up a user.
- * It includes fields for first name, last name, email, password, and confirm password.
- * It also includes a submit button.
- * 
- * @returns {JSX.Element} - A form component for signing up a user.
- */
 const SignUpForm = () => {
     const [error, setError] = useState(null);
     // hooks

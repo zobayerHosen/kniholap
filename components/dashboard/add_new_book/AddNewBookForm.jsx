@@ -118,7 +118,7 @@ const AddNewBookForm = () => {
         formData.append('author', data.author);
         formData.append('price', data.price);
         formData.append('stock', data.stock);
-        formData.append('isbn', data.isbn);
+        // formData.append('isbn', data.isbn);
         formData.append('condition', data.condition);
         formData.append('weight_gram', data.weight_gram);
         formData.append('description', data.description);
@@ -181,7 +181,6 @@ const AddNewBookForm = () => {
                             <div className="flex flex-col items-center justify-center h-full gap-3">
                                 <GrCloudUpload className="text-5xl text-gray-400" />
                                 <p className="text-lg">Click to upload cover image</p>
-                                <p className="text-sm text-gray-500">PNG, JPG up to 5MB</p>
                             </div>
                         )}
                     </label>
@@ -285,7 +284,7 @@ const AddNewBookForm = () => {
                     />
 
                     {/* isbn input */}
-                    <CommonInputWrapper
+                    {/* <CommonInputWrapper
                         label="ISBN"
                         name="isbn"
                         register_as="isbn"
@@ -295,7 +294,7 @@ const AddNewBookForm = () => {
                         validationRules={{
                             required: "ISBN is required"
                         }}
-                    />
+                    /> */}
                     {/* condition */}
                     <CommonInputWrapper
                         label="Condition"
@@ -339,7 +338,7 @@ const AddNewBookForm = () => {
                     />
 
                     {/* weight input */}
-                    <CommonInputWrapper
+                    {/* <CommonInputWrapper
                         label="Weight (gram)"
                         type="number"
                         name="weight_gram"
@@ -352,7 +351,7 @@ const AddNewBookForm = () => {
                                 required: "Weight is required"
                             }
                         }
-                    />
+                    /> */}
                     {/* shipping cost */}
                     <CommonInputWrapper
                         label="Shipping Cost"
