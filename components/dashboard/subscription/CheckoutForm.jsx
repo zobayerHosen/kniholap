@@ -164,23 +164,23 @@ const CheckoutForm = () => {
 
     // Note: main component
     return (
-        <div className="relative w-full flex flex-col gap-8 justify-start items-center">
+        <div className="relative w-full flex flex-col gap-6 justify-start items-center">
             <form className="w-full flex flex-col gap-6" onSubmit={handlePaymentSubmit}>
                 <PaymentElement
                     onReady={() => setIsPaymentElementReady(true)}
                 />
                 {/* Loading state */}
                 {!isPaymentElementReady && (
-                    <div className="w-full py-6 min-h-[60px] rounded-lg bg-gray-50 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-gray-50 via-gray-100 to-gray-50 animate-shimmer" />
-                        <p className="relative z-10 text-center text-gray-500">Loading secure payment form...</p>
+                    <div className="w-full py-8 min-h-[120px] rounded-2xl bg-[#f5f5f9] border border-gray-100 flex flex-col items-center justify-center gap-3">
+                        <FiLoader className="animate-spin text-2xl text-[#f84e12]" />
+                        <p className="text-sm font-medium text-gray-500">Loading secure payment form...</p>
                     </div>
                 )}
                 {/* Payment button */}
                 {isPaymentElementReady && (
                     <motion.button
                         type="submit"
-                        className="px-8 w-full justify-center py-4.5 rounded cursor-pointer bg-[#F84E12] text-white font-semibold flex items-center gap-2 hover:from-indigo-500 hover:to-indigo-600 transition-all duration-200 shadow-md disabled:opacity-70 disabled:cursor-not-allowed"
+                        className="px-8 w-full justify-center py-4 rounded-2xl cursor-pointer bg-[#f84e12] text-white font-bold flex items-center gap-2.5 hover:bg-[#e6450d] transition-all duration-300 shadow-md shadow-orange-500/10 disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={!stripe || isProcessing || handleSubscription.isPending}
                         whileTap={{ scale: !isProcessing ? 0.98 : 1 }}
                     >
@@ -192,7 +192,6 @@ const CheckoutForm = () => {
                         ) : (
                             <>
                                 <FiLock className="text-lg" />
-                                {/* {is_subscribed ? "Update Payment" : "Subscribe Now"} */}
                                 Subscribe Now
                             </>
                         )}
@@ -203,29 +202,32 @@ const CheckoutForm = () => {
                     <motion.div
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="px-3 py-5 relative rounded bg-red-50 border border-red-100 text-red-600 flex items-start gap-3"
+                        className="p-4 relative rounded-2xl bg-red-50 border border-red-100 text-red-600 flex items-start gap-3"
                     >
                         <FiAlertCircle className="flex-shrink-0 mt-0.5 text-xl" />
-                        <div className="w-full  flex flex-col relative">
-                            <p className="font-medium">Payment issue</p>
-                            <p className="text-sm">{error?.response?.data?.message}</p>
+                        <div className="w-full flex flex-col">
+                            <p className="font-semibold text-sm">Payment Issue</p>
+                            <p className="text-xs mt-1 text-red-500/90 leading-relaxed">
+                                {error?.response?.data?.message || error?.message || String(error)}
+                            </p>
                         </div>
                         <button
+                            type="button"
                             onClick={() => setError(null)}
-                            className=" absolute cursor-pointer top-2 right-2 bg-white  flex items-center justify-center rounded-full size-7"
+                            className="absolute cursor-pointer top-3 right-3 bg-white hover:bg-gray-100 transition flex items-center justify-center rounded-full size-6 shadow-sm border border-gray-100"
                         >
-                            <FiX size={14} />
+                            <FiX size={12} className="text-gray-500" />
                         </button>
                     </motion.div>
                 )}
             </form>
             {/* Security badges */}
-            <div className="w-full  flex text-gray-700 font-bold justify-center gap-6 opacity-70">
-                <div className="text-xs  flex items-center gap-1">
-                    <FiLock size={12} /> PCI Compliant
+            <div className="w-full flex text-gray-400 font-semibold justify-center gap-6 border-t border-gray-100 pt-6 mt-2">
+                <div className="text-xs flex items-center gap-1.5 hover:text-gray-600 transition">
+                    <FiLock size={13} className="text-[#f84e12]" /> <span>PCI Compliant</span>
                 </div>
-                <div className="text-xs   flex items-center gap-1">
-                    <FiCheckCircle size={12} /> Secure Encryption
+                <div className="text-xs flex items-center gap-1.5 hover:text-gray-600 transition">
+                    <FiCheckCircle size={13} className="text-[#f84e12]" /> <span>Secure 256-bit SSL</span>
                 </div>
             </div>
         </div>

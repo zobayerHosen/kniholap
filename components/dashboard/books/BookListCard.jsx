@@ -36,7 +36,7 @@ const BookListCard = ({ book }) => {
         dimensions,
         pdf_file,
         status,
-        published_at,
+        // published_at,
         view_count,
         download_count,
         rating_avg,
@@ -185,9 +185,9 @@ const BookListCard = ({ book }) => {
 
             {/* Additional Information */}
             <div className="text-sm text-gray-600 space-y-3">
-                <p className="font-medium">ISBN: {isbn}</p>
+                {/* <p className="font-medium">ISBN: {isbn ?? "N/A"}</p> */}
                 <p className="font-medium">Pages: {preview_pages} preview </p>
-                <span className="font-medium">Published: {formatDate(published_at)}</span>
+                {/* <span className="font-medium">Published: {formatDate(published_at)}</span> */}
             </div>
 
             {/* Description */}
