@@ -8,7 +8,22 @@ import { navItems } from '@/constants';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import NavLink from './common/NavLink';
+import { useQuery } from '@tanstack/react-query';
+import axiosPublic from '@/lib/axios.public';
 const Footer = () => {
+      const axios = axiosPublic();
+      const {
+        data, isLoading
+      } = useQuery({
+        queryKey: ["footer"],
+        queryFn:  async () => {
+          const res = await axios.get('/general-settings')
+          return res.data
+        },
+        staleTime: 24 * 60 * 60 * 1000,
+        cacheTime: Infinity
+      })
+
     const pathname = usePathname();
     const socials = [
         {
@@ -63,38 +78,61 @@ const Footer = () => {
                     </div>
                     {/* col-3 */}
                     <div className='w-full flex flex-col sm:text-lg gap-3 justify-start items-start'>
-                        <a className={``} href='#'>
+                        <Link className="transition-all duration-300 hover:text-primary" href='/terms-and-conditions'>
                             Terms & Conditions
-                        </a>
-                        <a className={``} href='#'>
+                        </Link>
+                        <Link className="transition-all duration-300 hover:text-primary" href='/privacy-policy'>
                             Privacy Policy
-                        </a>
+                        </Link>
                     </div>
                     {/* col-4 */}
                     <div className='w-full flex flex-col gap-1 sm:gap-3 justify-start items-start'>
                         <h2 className='sm:text-xl text-base font-semibold'>Contact Us</h2>
-                        {/* Address opens Google Maps */}
-                        <a
-                            href="https://www.google.com/maps/search/?api=1&query=123+Main+Street,+City,+Country"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className=" transition-all text-base duration-300 hover:underline"
-                        >
-                            <span>Address:</span> Level 10, 123 Collins Street Melbourne VIC 3000 Australia
-                        </a>
+                        
+                        {isLoading ? (
+                            <div className="animate-pulse flex flex-col gap-3 w-full mt-2">
+                                <div className="h-4 bg-gray-200/20 rounded w-full"></div>
+                                <div className="h-4 bg-gray-200/20 rounded w-3/4"></div>
+                                <div className="h-4 bg-gray-200/20 rounded w-5/6"></div>
+                            </div>
+                        ) : (
+                            <>
+                                {/* Address opens Google Maps */}
+                                {data?.data?.[0]?.address && (
+                                    <a
+                                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.data[0].address)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className=" transition-all text-base duration-300 hover:underline"
+                                    >
+                                        <span>Address:</span> {data.data[0].address}
+                                    </a>
+                                )}
 
-                        {/* Phone number opens dialer */}
-                        <a href='tel:+11234567890' className="transition-all duration-300 hover:underline">
-                            <span>Phone:</span> +1 (123) 456-7890
-                        </a>
+                                {/* Phone number opens dialer */}
+                                {data?.data?.[0]?.phone && (
+                                    <a href={`tel:${data.data[0].phone.replace(/[^0-9+]/g, '')}`} className="transition-all duration-300 hover:underline">
+                                        <span>Phone:</span> {data.data[0].phone}
+                                    </a>
+                                )}
 
-                        {/* Email opens mail client */}
-                        <a href='mailto:6XW7g@example.com' className="transition-all duration-300 hover:underline">
-                            <span>Email:</span> 6XW7g@example.com
-                        </a>
+                                {/* Email opens mail client */}
+                                {data?.data?.[0]?.email && (
+                                    <a href={`mailto:${data.data[0].email}`} className="transition-all duration-300 hover:underline">
+                                        <span>Email:</span> {data.data[0].email}
+                                    </a>
+                                )}
+                            </>
+                        )}
                     </div>
                 </div>
-                <p className='text-base capitalize'>©{new Date().getFullYear()}BookNest. All rights reserved</p>
+                <p className='text-base capitalize'>
+                    {isLoading ? (
+                        <span className="inline-block animate-pulse h-4 bg-gray-200/20 rounded w-64"></span>
+                    ) : (
+                        data?.data?.[0]?.copyright || `©${new Date().getFullYear()} BookNest. All rights reserved`
+                    )}
+                </p>
             </div>
         </footer>
     )

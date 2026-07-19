@@ -11,8 +11,7 @@ import dummyImage from "@/public/dummyImage.png"
 
 const BookCategories = () => {
     const { categoryList, categoryListError, categoryListLoading } = useOptions();
-
-    const [imageURL, setImageURL] = useState(categoryList?.image || dummyImage)
+    console.log(categoryList, "categoryList")
 
     // Skeleton Card Component
     const CategorySkeleton = () => (
@@ -23,6 +22,32 @@ const BookCategories = () => {
             <div className="w-full h-full rounded-3xl bg-gray-200"></div>
         </div>
     );
+
+    // Individual Category Card Component
+    const CategoryCard = ({ category }) => {
+        const [imgSrc, setImgSrc] = useState(category?.image || dummyImage);
+
+        return (
+            <div className="relative rounded-3xl w-56 md:w-72 lg:w-96 h-56 md:h-64 mx-3 group cursor-pointer">
+                {/* Category Badge */}
+                <div className="absolute line-clamp-1 md:ring-4 ring-2 md:py-3 py-1 md:px-8 px-4 text-lg md:text-xl text-center ring-white -top-4 left-5 bg-black text-white rounded-2xl font-medium z-10 transition-all group-hover:bg-gray-800">
+                    {category.title || "Category"}
+                </div>
+
+                {/* Cover Image */}
+                <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg">
+                    <Image
+                        src={imgSrc}
+                        alt={category.title || "Category"}
+                        width={400}
+                        height={500}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        onError={() => setImgSrc(dummyImage)}
+                    />
+                </div>
+            </div>
+        );
+    };
 
     // Note: main UI component
     return (
@@ -57,27 +82,7 @@ const BookCategories = () => {
                     ) : (
                         // Real Data — Now using actual categoryList
                         categoryList.map((category) => (
-                            <div
-                                key={category.id}
-                                className="relative rounded-3xl w-56 md:w-72 lg:w-96 h-56 md:h-64 mx-3 group cursor-pointer"
-                            >
-                                {/* Category Badge */}
-                                <div className="absolute line-clamp-1 md:ring-4 ring-2 md:py-3 py-1 md:px-8 px-4 text-lg md:text-xl text-center ring-white -top-4 left-5 bg-black text-white rounded-2xl font-medium z-10 transition-all group-hover:bg-gray-800">
-                                    {category.title || "Category"}
-                                </div>
-
-                                {/* Cover Image - You can use a placeholder or featured book cover */}
-                                <div className="w-full h-full rounded-3xl overflow-hidden shadow-lg">
-                                    <Image
-                                        src={imageURL}
-                                        alt={category.title || "Category"}
-                                        width={400}
-                                        height={500}
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        onError={() => setImageURL(dummyImage)}
-                                    />
-                                </div>
-                            </div>
+                            <CategoryCard key={category.id} category={category} />
                         ))
                     )}
                 </Marquee>
